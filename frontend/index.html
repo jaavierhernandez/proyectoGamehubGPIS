@@ -1,129 +1,539 @@
-<div class="gh-wrapper">
-	<div class="gh-hero">
-		<div class="gh-hero-content">
-			<div class="gh-hero-label">Última Noticia Destacada</div>
-			<h2 class="gh-hero-title">
-				Nuevo Trailer de<br><span>"Galaxy Bound"</span>
-			</h2>
-			<p class="gh-hero-desc">
-				Un avance exclusivo de la próxima gran aventura espacial. No te lo pierdas.
-			</p>
-			<a href="#ENLACE-NOTICIA" class="gh-btn-primary">Ver Más</a>
-		</div>
-	</div>
+function gamehub_home_page() {
+    ob_start();
 
-	<div class="gh-section gh-section-multimedia">
-		<h3 class="gh-section-title">🎬 Multimedia Hub</h3>
-		<div class="gh-media-grid">
-			<a href="#ENLACE-VIDEO-1" class="gh-media-card" target="_blank" rel="noopener">
-				<div class="gh-media-thumb fantasy">
-					<img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-19-may-2026-23_00_54.png" alt="Gameplay: La Forja del Destino">
-					<div class="gh-play-btn">
-						<svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
-					</div>
-				</div>
-				<div class="gh-media-meta">
-					<div class="gh-media-title">Gameplay: La Forja del Destino</div>
-					<div class="gh-media-sub">
-						<div class="author">
-							<div class="gh-avatar">E</div>
-							El_Gamer_Pro
-						</div>
-						<span>12:45</span>
-					</div>
-				</div>
-			</a>
+    echo <<<HTML
+    <style>
+		
+		.wp-block-group, .wp-block-template-part {
+			  margin: 0 !important;
+			  padding: 0 !important;
+		}
+		
+		body.page .entry-content.alignfull,
+		body.page .wp-block-post-content,
+		body.page .has-global-padding,
+		body.page [style*="padding-top"],
+		body.page [style*="padding-bottom"] {
+			padding-top: 0 !important;
+			padding-bottom: 0 !important;
+		}
 
-			<a href="#ENLACE-VIDEO-2" class="gh-media-card" target="_blank" rel="noopener">
-				<div class="gh-media-thumb esports">
-					<img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-00_30_06.png" alt="Stream: Torneo de Verano">
-					<div class="gh-badge-live">LIVE</div>
-					<div class="gh-badge-viewers">
-						<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-						4.5K
-					</div>
-					<div class="gh-play-btn">
-						<svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
-					</div>
-				</div>
-				<div class="gh-media-meta">
-					<div class="gh-media-title">Stream en Vivo: Torneo de Verano</div>
-					<div class="gh-media-sub">
-						<div class="author">
-							<div class="gh-avatar" style="background:#e8192c;">X</div>
-							X-Sniper
-						</div>
-						<span style="color:#e8192c;font-weight:700;">● EN VIVO</span>
-					</div>
-				</div>
-			</a>
+		body.page .site-content,
+		body.page #content,
+		body.page .entry-content,
+		body.page main,
+		body.page #main {
+			background: #0a0c14 !important;
+			padding: 0 !important;
+			margin: 0 !important;
+		}
+		
+        .gh-wrapper {
+            font-family: sans-serif;
+            background: #0a0c14;
+            color: #e8eaf0;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            margin-left: calc(-50vw + 50%) !important;
+            margin-right: calc(-50vw + 50%) !important;
+            overflow: hidden;
+            border-radius: 0;
+            border: none;
+        }
+        .gh-hero {
+            position: relative;
+            min-height: 750px;
+            background-image: url("http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-19-may-2026-22_14_29-2.png");
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: flex-start;
+            padding: 60px 60px 32px;
+            overflow: hidden;
+        }
+        .gh-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 80% at 70% 50%, rgba(26,111,255,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 60% at 85% 20%, rgba(0,212,255,0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .gh-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+        .gh-hero-label {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #f5a623;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .gh-hero-label::before {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 2px;
+            background: #f5a623;
+        }
+        .gh-hero-title {
+            font-size: clamp(42px, 4vw, 72px);
+            font-weight: 700;
+            line-height: 1.1;
+            color: #ffffff;
+            margin: 0 0 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        .gh-hero-title span {
+            color: #00d4ff;
+        }
+        .gh-hero-desc {
+            font-size: 22px;
+            color: #a0a8be;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            white-space: nowrap;
+        }
+        .gh-btn-primary {
+            display: block;
+            padding: 14px 40px;
+            background: transparent;
+            border: 2px solid #00d4ff;
+            color: #00d4ff;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        .gh-btn-primary:hover {
+            background: #00d4ff;
+            color: #0a0c14;
+            box-shadow: 0 0 20px rgba(0,212,255,0.5);
+            text-decoration: none;
+        }
+        .gh-section {
+            position: relative;
+            padding: 40px 28px;
+            border-top: 1px solid #1e2540;
+        }
+        .gh-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 12, 20, 0.45);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .gh-section > * {
+            position: relative;
+            z-index: 1;
+        }
+        .gh-section-multimedia {
+            background-image: url("http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-19-may-2026-22_37_28-1.png");
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            min-height: 700px;
+            padding-bottom: 60px;
+        }
+        .gh-section-ranking {
+            background-image: url("http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-01_13_03.png");
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            min-height: 550px;
+            padding-bottom: 60px;
+        }
+        .gh-section-title {
+            font-size: 60px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+        }
+        .gh-media-grid {
+            display: grid;
+            grid-template-columns: 33.33% 33.33% 33.33%;
+            gap: 8px;
+        }
+        .gh-media-card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            text-decoration: none;
+            color: #e8eaf0;
+            display: block;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .gh-media-card:hover {
+            transform: translateY(-3px);
+            border-color: #1a6fff;
+            box-shadow: 0 8px 30px rgba(26,111,255,0.25);
+            text-decoration: none;
+            color: #e8eaf0;
+        }
+        .gh-media-thumb {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: #1a1e2e;
+            overflow: hidden;
+        }
+        .gh-media-thumb img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .gh-media-thumb.fantasy { background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 40%, #1e3a1e 100%); }
+        .gh-media-thumb.esports { background: linear-gradient(135deg, #0a1628 0%, #1a2840 60%, #0d1f0d 100%); }
+        .gh-media-thumb.review  { background: linear-gradient(135deg, #1a1200 0%, #2d2000 50%, #1a0d00 100%); }
+        .gh-play-btn {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .gh-play-btn svg {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            padding: 10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .gh-media-card:hover .gh-play-btn svg {
+            background: rgba(26,111,255,0.5);
+            transform: scale(1.1);
+            border-color: #1a6fff;
+        }
+        .gh-badge-live {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #e8192c;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 3;
+        }
+        .gh-badge-live::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            animation: gh-blink 1.2s infinite;
+        }
+        @keyframes gh-blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.2; }
+        }
+        .gh-badge-viewers {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.6);
+            color: #e8eaf0;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 3;
+        }
+        .gh-badge-score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #f5a623;
+            z-index: 3;
+            line-height: 1;
+        }
+        .gh-badge-score small {
+            font-size: 14px;
+            color: #7a8099;
+        }
+        .gh-media-meta {
+            padding: 12px 14px;
+        }
+        .gh-media-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+        .gh-media-sub {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #7a8099;
+        }
+        .gh-media-sub .author {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .gh-avatar {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #1a6fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: #fff;
+            font-weight: 700;
+        }
+        .gh-rank-list {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            padding-top: 20px;
+        }
+        .gh-rank-item {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 24px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            transition: border-color 0.2s, transform 0.2s;
+            backdrop-filter: none;
+        }
+        .gh-rank-item:hover {
+            border: none;
+            transform: translateY(-2px);
+        }
+        .gh-rank-icon {
+            width: 140px;
+            height: 140px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            border: none;
+            flex-shrink: 0;
+            box-shadow: none;
+        }
+        .gh-rank-icon-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 68px;
+        }
+        .gh-rank-name {
+            font-size: 17px;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            color: #fff;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+        }
+        .gh-rank-pos        { font-size: 17px; font-weight: 700; color: #f5a623; letter-spacing: 1px; }
+        .gh-rank-pos.silver { color: #a0a8be; }
+        .gh-rank-pos.bronze { color: #cd7f32; }
+        .gh-rank-pos.red    { color: #e8192c; }
+        .gh-rank-pos.blue   { color: #1a6fff; }
+        .gh-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #1e2540, #f5a623, #1e2540, transparent);
+        }
+        @media (max-width: 480px) {
+            .gh-media-grid { grid-template-columns: 100%; }
+            .gh-rank-list  { flex-wrap: wrap; gap: 12px; }
+            .gh-rank-item  { min-width: 130px; }
+        }
+    </style>
 
-			<a href="#ENLACE-VIDEO-3" class="gh-media-card" target="_blank" rel="noopener">
-				<div class="gh-media-thumb review">
-					<img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-00_37_47.png" alt="Reseña: El Círculo del Cielo">
-					<div class="gh-badge-score">8.5<small>/10</small></div>
-					<div class="gh-play-btn">
-						<svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
-					</div>
-				</div>
-				<div class="gh-media-meta">
-					<div class="gh-media-title">Rís: El Círculo del Cielo</div>
-					<div class="gh-media-sub">
-						<div class="author">
-							<div class="gh-avatar" style="background:#f5a623;color:#000;">G</div>
-							Gamer's Digest
-						</div>
-						<span style="color:#f5a623;">★★★★☆</span>
-					</div>
-				</div>
-			</a>
-		</div>
-	</div>
+    <div class="gh-wrapper">
 
-	<div class="gh-divider"></div>
+        <div class="gh-hero">
+            <div class="gh-hero-content">
+                <div class="gh-hero-label">Última Noticia Destacada</div>
+                <h2 class="gh-hero-title">
+                    Nuevo Trailer de<br><span>"Galaxy Bound"</span>
+                </h2>
+                <p class="gh-hero-desc">
+                    Un avance exclusivo de la próxima gran aventura espacial. No te lo pierdas.
+                </p>
+                <a href="#ENLACE-NOTICIA" class="gh-btn-primary">Ver Más</a>
+            </div>
+        </div>
 
-	<div class="gh-section gh-section-ranking">
-		<h3 class="gh-section-title">🏆 Ranking Global de Juegos</h3>
-		<div class="gh-rank-list">
-			<div class="gh-rank-item">
-				<div class="gh-rank-icon top1">
-					<img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-01_58_46.png" alt="La Forja del Destino" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-				</div>
-				<div class="gh-rank-name">La Forja del Destino</div>
-				<div class="gh-rank-pos">Top 1</div>
-			</div>
+        <div class="gh-section gh-section-multimedia">
+            <h3 class="gh-section-title">🎬 Multimedia Hub</h3>
+            <div class="gh-media-grid">
 
-			<div class="gh-rank-item">
-				<div class="gh-rank-icon top2">
-					<img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-02_00_05.png" alt="El Círculo del Cielo" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-				</div>
-				<div class="gh-rank-name">El Círculo del Cielo</div>
-				<div class="gh-rank-pos silver">Top 2</div>
-			</div>
+                <a href="#ENLACE-VIDEO-1" class="gh-media-card" target="_blank" rel="noopener">
+                    <div class="gh-media-thumb fantasy">
+                        <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-19-may-2026-23_00_54.png" alt="Gameplay: La Forja del Destino">
+                        <div class="gh-play-btn">
+                            <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
+                    <div class="gh-media-meta">
+                        <div class="gh-media-title">Gameplay: La Forja del Destino</div>
+                        <div class="gh-media-sub">
+                            <div class="author">
+                                <div class="gh-avatar">E</div>
+                                El_Gamer_Pro
+                            </div>
+                            <span>12:45</span>
+                        </div>
+                    </div>
+                </a>
 
-			<div class="gh-rank-item">
-				<div class="gh-rank-icon top3">
-					<img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-02_05_04.png" alt="Kingdoms of War" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-				</div>
-				<div class="gh-rank-name">Kingdoms of War</div>
-				<div class="gh-rank-pos bronze">Top 3</div>
-			</div>
+                <a href="#ENLACE-VIDEO-2" class="gh-media-card" target="_blank" rel="noopener">
+                    <div class="gh-media-thumb esports">
+                        <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-00_30_06.png" alt="Stream: Torneo de Verano">
+                        <div class="gh-badge-live">LIVE</div>
+                        <div class="gh-badge-viewers">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                            4.5K
+                        </div>
+                        <div class="gh-play-btn">
+                            <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
+                    <div class="gh-media-meta">
+                        <div class="gh-media-title">Stream en Vivo: Torneo de Verano</div>
+                        <div class="gh-media-sub">
+                            <div class="author">
+                                <div class="gh-avatar" style="background:#e8192c;">X</div>
+                                X-Sniper
+                            </div>
+                            <span style="color:#e8192c;font-weight:700;">● EN VIVO</span>
+                        </div>
+                    </div>
+                </a>
 
-			<div class="gh-rank-item">
-				<div class="gh-rank-icon top4">
-					<img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-02_06_34.png" alt="Tactical Ops" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-				</div>
-				<div class="gh-rank-name">Tactical Ops</div>
-				<div class="gh-rank-pos red">Top 4</div>
-			</div>
+                <a href="#ENLACE-VIDEO-3" class="gh-media-card" target="_blank" rel="noopener">
+                    <div class="gh-media-thumb review">
+                        <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-00_37_47.png" alt="Reseña: El Círculo del Cielo">
+                        <div class="gh-badge-score">8.5<small>/10</small></div>
+                        <div class="gh-play-btn">
+                            <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
+                    <div class="gh-media-meta">
+                        <div class="gh-media-title">Reseña: El Círculo del Cielo</div>
+                        <div class="gh-media-sub">
+                            <div class="author">
+                                <div class="gh-avatar" style="background:#f5a623;color:#000;">G</div>
+                                Gamer's Digest
+                            </div>
+                            <span style="color:#f5a623;">★★★★☆</span>
+                        </div>
+                    </div>
+                </a>
 
-			<div class="gh-rank-item">
-				<div class="gh-rank-icon top5">
-					<img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-02_08_07.png" alt="Megacity Chronicles" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-				</div>
-				<div class="gh-rank-name">Megacity Chronicles</div>
-				<div class="gh-rank-pos blue">Top 5</div>
-			</div>
-		</div>
-	</div>
-</div>
+            </div>
+        </div>
+
+        <div class="gh-divider"></div>
+
+        <div class="gh-section gh-section-ranking">
+            <h3 class="gh-section-title">🏆 Ranking Global de Juegos</h3>
+            <div class="gh-rank-list">
+
+                <div class="gh-rank-item">
+                    <div class="gh-rank-icon top1">
+                        <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-01_58_46.png" alt="La Forja del Destino" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                    </div>
+                    <div class="gh-rank-name">La Forja del Destino</div>
+                    <div class="gh-rank-pos">Top 1</div>
+                </div>
+
+                <div class="gh-rank-item">
+                    <div class="gh-rank-icon top2">
+                        <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-02_00_05.png" alt="El Círculo del Cielo" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                    </div>
+                    <div class="gh-rank-name">El Círculo del Cielo</div>
+                    <div class="gh-rank-pos silver">Top 2</div>
+                </div>
+
+                <div class="gh-rank-item">
+                    <div class="gh-rank-icon top3">
+                        <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-02_05_04.png" alt="Kingdoms of War" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                    </div>
+                    <div class="gh-rank-name">Kingdoms of War</div>
+                    <div class="gh-rank-pos bronze">Top 3</div>
+                </div>
+
+                <div class="gh-rank-item">
+                    <div class="gh-rank-icon top4">
+                        <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-02_06_34.png" alt="Tactical Ops" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                    </div>
+                    <div class="gh-rank-name">Tactical Ops</div>
+                    <div class="gh-rank-pos red">Top 4</div>
+                </div>
+
+                <div class="gh-rank-item">
+                    <div class="gh-rank-icon top5">
+                        <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-20-may-2026-02_08_07.png" alt="Megacity Chronicles" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+                    </div>
+                    <div class="gh-rank-name">Megacity Chronicles</div>
+                    <div class="gh-rank-pos blue">Top 5</div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+HTML;
+
+    return ob_get_clean();
+}
+add_shortcode('gamehub_home', 'gamehub_home_page');
