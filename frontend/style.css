@@ -164,7 +164,7 @@
 .gh-media-grid {
   display: grid;
   grid-template-columns: 33.33% 33.33% 33.33%;
-  gap: 32px;
+  gap: 8px;
 }
 
 .gh-media-card {
