@@ -1,0 +1,640 @@
+function gamehub_catalog_page() {
+    ob_start();
+    echo <<<HTML
+    <style>
+	
+		.wp-block-group, .wp-block-template-part {
+			  margin: 0 !important;
+			  padding: 0 !important;
+		}
+		
+		body.page .entry-content.alignfull,
+		body.page .wp-block-post-content,
+		body.page .has-global-padding,
+		body.page [style*="padding-top"],
+		body.page [style*="padding-bottom"] {
+			padding-top: 0 !important;
+			padding-bottom: 0 !important;
+		}
+
+		body.page .site-content,
+		body.page #content,
+		body.page .entry-content,
+		body.page main,
+		body.page #main {
+			background: #0a0c14 !important;
+			padding: 0 !important;
+			margin: 0 !important;
+		}
+	
+        .gc-wrapper {
+            font-family: sans-serif;
+            background: #0a0c14;
+            color: #e8eaf0;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            margin-left: calc(-50vw + 50%) !important;
+            margin-right: calc(-50vw + 50%) !important;
+            overflow: hidden;
+            padding: 40px 32px 60px;
+            box-sizing: border-box;
+        }
+
+        .gc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .gc-title {
+            font-size: clamp(28px, 3vw, 48px);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(0,212,255,0.3);
+        }
+        .gc-title span { color: #00d4ff; }
+
+        .gc-view-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .gc-view-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 22px;
+            background: transparent;
+            border: 1.5px solid #1e2540;
+            border-radius: 8px;
+            color: #7a8099;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
+        }
+        .gc-view-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+        .gc-view-btn.active, .gc-view-btn:hover {
+            border-color: #00d4ff;
+            color: #00d4ff;
+            background: rgba(0,212,255,0.08);
+        }
+
+        .gc-layout {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .gc-sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            border-radius: 12px;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: sticky;
+            top: 20px;
+        }
+        .gc-search-wrap {
+            position: relative;
+        }
+        .gc-search {
+            width: 100%;
+            background: #141828;
+            border: 1px solid #1e2540;
+            border-radius: 8px;
+            padding: 10px 14px 10px 38px;
+            color: #e8eaf0;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .gc-search::placeholder { color: #3a4060; }
+        .gc-search:focus { border-color: #00d4ff; }
+        .gc-search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            stroke: #4a5280;
+        }
+        .gc-filter-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+        .gc-filter-group { display: flex; flex-direction: column; gap: 4px; }
+        .gc-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+        .gc-checkbox input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            accent-color: #00d4ff;
+            cursor: pointer;
+        }
+        .gc-checkbox span { font-size: 14px; color: #a0a8be; }
+        .gc-select {
+            width: 100%;
+            background: #141828;
+            border: 1px solid #1e2540;
+            border-radius: 8px;
+            padding: 9px 12px;
+            color: #a0a8be;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .gc-select:focus { border-color: #00d4ff; }
+        .gc-results-count {
+            font-size: 12px;
+            color: #4a5280;
+            text-align: center;
+            padding-top: 4px;
+            border-top: 1px solid #1e2540;
+        }
+        .gc-results-count span { color: #00d4ff; font-weight: 700; }
+
+        .gc-content { flex: 1; min-width: 0; }
+        .gc-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+        }
+        .gc-grid.row-top {
+            margin-bottom: 12px;
+        }
+        .gc-grid.row-bottom {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .gc-list { display: flex; flex-direction: column; gap: 10px; }
+        .gc-list .gc-card {
+            display: flex;
+            flex-direction: row;
+            height: 90px;
+            border-radius: 8px;
+        }
+        .gc-list .gc-card-thumb {
+            width: 140px;
+            height: 90px;
+            aspect-ratio: unset;
+            flex-shrink: 0;
+            border-radius: 8px 0 0 8px;
+        }
+        .gc-list .gc-card-info {
+            flex: 1;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .gc-list .gc-card-name {
+            font-size: 20px;
+            flex: 1;
+        }
+        .gc-list .gc-platforms { margin-top: 0; }
+        .gc-list .gc-score-badge {
+            position: static;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .gc-list .gc-genre-tag {
+            font-size: 11px;
+            padding: 3px 8px;
+            background: rgba(0,212,255,0.08);
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 4px;
+            color: #00d4ff;
+            white-space: nowrap;
+        }
+		
+		.gc-list .gc-genre-badge {
+			position: static;
+			flex-shrink: 0;
+		}
+
+        .gc-card {
+            position: relative;
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            margin: 6px;
+        }
+        .gc-card:hover {
+            transform: translateY(-4px);
+            border-color: #1a6fff;
+            box-shadow: 0 10px 30px rgba(26,111,255,0.25);
+        }
+        .gc-card-thumb {
+            position: relative;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            background: #1a1e2e;
+        }
+        .gc-card-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s;
+        }
+        .gc-card:hover .gc-card-thumb img { transform: scale(1.05); }
+        .gc-score-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(10,12,20,0.85);
+            border: 1px solid #1a6fff;
+            border-radius: 6px;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            backdrop-filter: blur(4px);
+        }
+        .gc-score-badge svg { width: 12px; height: 12px; fill: #f5a623; }
+        .gc-score-num {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .gc-card-info {
+            padding: 10px 12px 12px;
+            position: relative;
+        }
+        .gc-card-name {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #fff;
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+
+        .gc-platforms {
+            display: flex;
+            gap: 5px;
+            margin-top: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .gc-plat-tag {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            line-height: 1.4;
+        }
+        .gc-plat-tag.pc    { background: rgba(100,180,255,0.12); color: #64b4ff; border: 1px solid rgba(100,180,255,0.25); }
+        .gc-plat-tag.ps5   { background: rgba(0,112,255,0.12);   color: #0070ff; border: 1px solid rgba(0,112,255,0.3);   }
+        .gc-plat-tag.xbox  { background: rgba(16,180,16,0.12);   color: #10b410; border: 1px solid rgba(16,180,16,0.3);   }
+        .gc-plat-tag.switch{ background: rgba(230,20,20,0.12);   color: #e61414; border: 1px solid rgba(230,20,20,0.3);   }
+
+        /* ── Icono de género — esquina inferior derecha de la tarjeta ── */
+        .gc-genre-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            color: #4a5280;
+            transition: color 0.2s;
+        }
+        .gc-genre-badge svg {
+            width: 13px;
+            height: 13px;
+            fill: #4a5280;
+            flex-shrink: 0;
+            transition: fill 0.2s;
+        }
+        .gc-card:hover .gc-genre-badge,
+        .gc-card:hover .gc-genre-badge svg {
+            color: #7a8099;
+            fill: #7a8099;
+        }
+
+        .gc-no-results {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+            color: #4a5280;
+            font-size: 16px;
+        }
+        .gc-no-results.show { display: block; }
+
+        @media (max-width: 768px) {
+            .gc-layout { flex-direction: column; }
+            .gc-sidebar { width: 100%; position: static; }
+            .gc-grid { grid-template-columns: repeat(2,1fr) !important; }
+        }
+        @media (max-width: 480px) {
+            .gc-grid { grid-template-columns: 1fr !important; }
+            .gc-wrapper { padding: 20px 16px 40px; }
+        }
+    </style>
+
+    <div class="gc-wrapper">
+
+        <div class="gc-header">
+            <h2 class="gc-title">Catálogo <span>Global</span> de Videojuegos</h2>
+            <div class="gc-view-btns">
+                <button class="gc-view-btn active" id="btn-grid" onclick="gcSetView('grid')">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h7v7H3zm11 0h7v7h-7zM3 14h7v7H3zm11 0h7v7h-7z"/></svg>
+                    Vista Cuadrícula
+                </button>
+                <button class="gc-view-btn" id="btn-list" onclick="gcSetView('list')">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v2H3zm0 6h18v2H3zm0 6h18v2H3z"/></svg>
+                    Vista Lista
+                </button>
+            </div>
+        </div>
+
+        <div class="gc-layout">
+
+            <div class="gc-sidebar">
+                <div class="gc-search-wrap">
+                    <svg class="gc-search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <input type="text" class="gc-search" id="gc-search-input" placeholder="Buscar por título..." oninput="gcFilter()">
+                </div>
+
+                <div>
+                    <div class="gc-filter-label">Plataforma</div>
+                    <div class="gc-filter-group">
+                        <label class="gc-checkbox"><input type="checkbox" value="pc" checked onchange="gcFilter()"><span>PC</span></label>
+                        <label class="gc-checkbox"><input type="checkbox" value="ps5" checked onchange="gcFilter()"><span>PS5</span></label>
+                        <label class="gc-checkbox"><input type="checkbox" value="xbox" checked onchange="gcFilter()"><span>Xbox</span></label>
+                        <label class="gc-checkbox"><input type="checkbox" value="switch" checked onchange="gcFilter()"><span>Switch</span></label>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="gc-filter-label">Género</div>
+                    <select class="gc-select" id="gc-genre" onchange="gcFilter()">
+                        <option value="">Todos los géneros</option>
+                        <option value="RPG">RPG</option>
+                        <option value="Acción">Acción</option>
+                        <option value="Ciencia Ficción">Ciencia Ficción</option>
+                        <option value="Estrategia">Estrategia</option>
+                        <option value="Aventura">Aventura</option>
+                    </select>
+                </div>
+
+                <div>
+                    <div class="gc-filter-label">Ordenar por</div>
+                    <select class="gc-select" id="gc-sort" onchange="gcSort()">
+                        <option value="">Por defecto</option>
+                        <option value="score-desc">Mayor puntuación</option>
+                        <option value="score-asc">Menor puntuación</option>
+                        <option value="name-asc">Nombre A-Z</option>
+                        <option value="name-desc">Nombre Z-A</option>
+                    </select>
+                </div>
+
+                <div class="gc-results-count">Mostrando <span id="gc-count">7</span> juegos</div>
+            </div>
+
+            <div class="gc-content" id="gc-content">
+
+                <div id="gc-grid-view">
+                    <div class="gc-grid row-top" id="gc-row-top"></div>
+                    <div class="gc-grid row-bottom" id="gc-row-bottom"></div>
+                </div>
+
+                <div class="gc-list" id="gc-list-view" style="display:none;"></div>
+
+                <div class="gc-no-results" id="gc-no-results">No se encontraron juegos con los filtros seleccionados.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var GC_GAMES = [
+        {
+            id: 1,
+            name: "La Forja del Destino",
+            img: "http://gamehub.local/wp-content/uploads/2026/05/forja.png",
+            score: 9.50,
+            genre: "RPG",
+            platforms: ["pc","ps5","switch"],
+            row: "top"
+        },
+        {
+            id: 2,
+            name: "El Círculo del Cielo",
+            img: "http://gamehub.local/wp-content/uploads/2026/05/circulo.png",
+            score: 9.20,
+            genre: "Aventura",
+            platforms: ["pc","ps5","xbox"],
+            row: "top"
+        },
+        {
+            id: 3,
+            name: "Cyber-Samurai 2077",
+            img: "http://gamehub.local/wp-content/uploads/2026/05/cyber.png",
+            score: 9.90,
+            genre: "Acción",
+            platforms: ["pc","ps5","xbox"],
+            row: "top"
+        },
+        {
+            id: 4,
+            name: "Galactic Pioneers",
+            img: "http://gamehub.local/wp-content/uploads/2026/05/galactic.png",
+            score: 9.50,
+            genre: "Ciencia Ficción",
+            platforms: ["pc","xbox"],
+            row: "bottom"
+        },
+        {
+            id: 5,
+            name: "The Crystal Kingdom",
+            img: "http://gamehub.local/wp-content/uploads/2026/05/crystal.png",
+            score: 9.20,
+            genre: "RPG",
+            platforms: ["pc","ps5"],
+            row: "bottom"
+        },
+        {
+            id: 6,
+            name: "Mech-Warrior Zero",
+            img: "http://gamehub.local/wp-content/uploads/2026/05/mech.png",
+            score: 8.90,
+            genre: "Estrategia",
+            platforms: ["pc","xbox"],
+            row: "bottom"
+        },
+        {
+            id: 7,
+            name: "Spellbound Odyssey",
+            img: "http://gamehub.local/wp-content/uploads/2026/05/spellbound.png",
+            score: 9.50,
+            genre: "Aventura",
+            platforms: ["pc","ps5"],
+            row: "bottom"
+        }
+    ];
+
+    var gcCurrentView = 'grid';
+    var gcVisible = GC_GAMES.slice();
+
+    var PLAT_LABELS = { pc: 'PC', ps5: 'PS5', xbox: 'Xbox', switch: 'Switch' };
+
+    function gcPlatTags(platforms) {
+        return platforms.map(function(p){
+            return '<span class="gc-plat-tag ' + p + '">' + (PLAT_LABELS[p] || p) + '</span>';
+        }).join('');
+    }
+
+    var GENRE_ICONS = {
+        'RPG':             '<svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>',
+        'Acción':          '<svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+        'Ciencia Ficción': '<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>',
+        'Estrategia':      '<svg viewBox="0 0 24 24"><path d="M3 3h7v4H3zm11 0h7v4h-7zM3 10h4v11H3zm14 0h4v11h-4zM8 17h8v4H8z"/></svg>',
+        'Aventura':        '<svg viewBox="0 0 24 24"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z"/></svg>'
+    };
+
+    function gcGenreIcon(genre) {
+        var icon = GENRE_ICONS[genre] || '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>';
+        return '<div class="gc-genre-badge">' + icon + genre + '</div>';
+    }
+
+    function gcCardHTML(game, listMode) {
+        var score = game.score.toFixed(2);
+        if (listMode) {
+            return '<div class="gc-card" data-id="' + game.id + '" data-platforms="' + game.platforms.join(',') + '" data-genre="' + game.genre + '" data-score="' + game.score + '" data-name="' + game.name + '">' +
+        	'<div class="gc-card-thumb"><img src="' + game.img + '" alt="' + game.name + '" loading="lazy"></div>' +
+        	'<div class="gc-card-info">' +
+        	'<div class="gc-card-name">' + game.name + '</div>' +
+        	gcGenreIcon(game.genre) +
+        	'<div class="gc-platforms">' + gcPlatTags(game.platforms) + '</div>' +
+        	'<div class="gc-score-badge"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="gc-score-num">' + score + '</span></div>' +
+        '</div></div>';
+        }
+        return '<div class="gc-card" data-id="' + game.id + '" data-platforms="' + game.platforms.join(',') + '" data-genre="' + game.genre + '" data-score="' + game.score + '" data-name="' + game.name + '">' +
+            '<div class="gc-card-thumb"><img src="' + game.img + '" alt="' + game.name + '" loading="lazy">' +
+            '<div class="gc-score-badge"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="gc-score-num">' + score + '</span></div>' +
+            '</div>' +
+            '<div class="gc-card-info">' +
+            '<div class="gc-card-name">' + game.name + '</div>' +
+            '<div class="gc-platforms">' + gcPlatTags(game.platforms) + '</div>' +
+            gcGenreIcon(game.genre) +
+            '</div></div>';
+    }
+
+    function gcRender() {
+        var top = document.getElementById('gc-row-top');
+        var bottom = document.getElementById('gc-row-bottom');
+        var list = document.getElementById('gc-list-view');
+        var noResults = document.getElementById('gc-no-results');
+        var count = document.getElementById('gc-count');
+
+        top.innerHTML = '';
+        bottom.innerHTML = '';
+        list.innerHTML = '';
+
+        if (gcVisible.length === 0) {
+            noResults.classList.add('show');
+            count.textContent = '0';
+            return;
+        }
+        noResults.classList.remove('show');
+        count.textContent = gcVisible.length;
+
+        if (gcCurrentView === 'grid') {
+            gcVisible.forEach(function(g) {
+                if (g.row === 'top') top.innerHTML += gcCardHTML(g, false);
+                else bottom.innerHTML += gcCardHTML(g, false);
+            });
+        } else {
+            gcVisible.forEach(function(g) {
+                list.innerHTML += gcCardHTML(g, true);
+            });
+        }
+    }
+
+    function gcFilter() {
+        var search = document.getElementById('gc-search-input').value.toLowerCase();
+        var genre = document.getElementById('gc-genre').value;
+        var checkedPlats = Array.from(document.querySelectorAll('.gc-sidebar input[type=checkbox]:checked')).map(function(c){ return c.value; });
+
+        if (checkedPlats.length === 0) {
+            gcVisible = [];
+            gcRender();
+            return;
+        }
+
+        gcVisible = GC_GAMES.filter(function(g) {
+            var matchName = g.name.toLowerCase().indexOf(search) !== -1;
+            var matchGenre = genre === '' || g.genre === genre;
+            var matchPlat = g.platforms.some(function(p){ return checkedPlats.indexOf(p) !== -1; });
+            return matchName && matchGenre && matchPlat;
+        });
+
+        gcSort(true);
+    }
+
+    function gcSort(skipRender) {
+        var sort = document.getElementById('gc-sort').value;
+        if (sort === 'score-desc') gcVisible.sort(function(a,b){ return b.score - a.score; });
+        else if (sort === 'score-asc') gcVisible.sort(function(a,b){ return a.score - b.score; });
+        else if (sort === 'name-asc') gcVisible.sort(function(a,b){ return a.name.localeCompare(b.name); });
+        else if (sort === 'name-desc') gcVisible.sort(function(a,b){ return b.name.localeCompare(a.name); });
+        else gcVisible.sort(function(a,b){ return a.id - b.id; });
+
+        gcVisible.forEach(function(g, i) {
+            g._row = i < 3 ? 'top' : 'bottom';
+        });
+        gcVisible.forEach(function(g) { g.row = g._row || g.row; });
+
+        if (!skipRender) gcRender();
+        else gcRender();
+    }
+
+    function gcSetView(view) {
+        gcCurrentView = view;
+        document.getElementById('btn-grid').classList.toggle('active', view === 'grid');
+        document.getElementById('btn-list').classList.toggle('active', view === 'list');
+        document.getElementById('gc-grid-view').style.display = view === 'grid' ? 'block' : 'none';
+        document.getElementById('gc-list-view').style.display = view === 'list' ? 'flex' : 'none';
+        gcRender();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() { gcRender(); });
+    if (document.readyState !== 'loading') gcRender();
+    </script>
+HTML;
+    return ob_get_clean();
+}
+add_shortcode('gamehub_catalog', 'gamehub_catalog_page');
