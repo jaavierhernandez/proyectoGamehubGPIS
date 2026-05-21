@@ -39,7 +39,6 @@ function gamehub_article_page() {
             box-sizing: border-box;
         }
 
-        /* HERO */
         .ga-hero {
 			position: relative;
 			height: 600px;
@@ -105,7 +104,6 @@ function gamehub_article_page() {
             flex-shrink: 0;
         }
 
-        /* LAYOUT PRINCIPAL */
         .ga-layout {
 			display: grid;
 			grid-template-columns: 1fr 480px;
@@ -115,7 +113,6 @@ function gamehub_article_page() {
 			margin: 0 auto;
 		}
 
-        /* CONTENIDO PRINCIPAL */
         .ga-main {}
 
         .ga-intro {
@@ -127,7 +124,6 @@ function gamehub_article_page() {
 			border-bottom: 1px solid #1e2540;
 		}
 
-        /* CAMBIO 1: content-grid con altura fija igual a la imagen */
         .ga-content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -150,7 +146,6 @@ function gamehub_article_page() {
         }
         .ga-content-img:hover img { transform: scale(1.05); }
 
-        /* CAMBIO 1: el texto ocupa todo el alto y distribuye los bullets */
         .ga-content-text {
             font-size: 15px;
             color: #a0a8be;
@@ -178,7 +173,6 @@ function gamehub_article_page() {
             background: linear-gradient(90deg, #1e2540, transparent);
         }
 
-        /* CAMBIO 1: bullets más grandes para ocupar el alto disponible */
         .ga-bullet-list {
             list-style: none;
             display: flex;
@@ -215,7 +209,6 @@ function gamehub_article_page() {
 			margin-bottom: 24px;
 		}
 
-        /* CAMBIO 3: quotes más grandes */
         .ga-quote {
             border-left: 3px solid #00d4ff;
             padding: 20px 24px;
@@ -238,7 +231,6 @@ function gamehub_article_page() {
             font-style: normal;
         }
 
-        /* SIDEBAR */
         .ga-sidebar {
 			display: flex;
 			flex-direction: column;
@@ -273,7 +265,6 @@ function gamehub_article_page() {
             flex-shrink: 0;
         }
 
-        /* Noticias relacionadas */
         .ga-related-list {
             display: flex;
             flex-direction: column;
@@ -323,7 +314,6 @@ function gamehub_article_page() {
             fill: #4a5280;
         }
 
-        /* Juegos relacionados */
         .ga-games-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -341,7 +331,6 @@ function gamehub_article_page() {
             border-color: #1a6fff;
             transform: translateY(-2px);
         }
-        /* CAMBIO 3: imágenes de juegos más altas */
         .ga-game-item img {
             width: 100%;
             height: 140px;
@@ -389,7 +378,6 @@ function gamehub_article_page() {
 
     <div class="ga-wrapper">
 
-        <!-- HERO -->
         <div class="ga-hero">
             <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-19-may-2026-22_14_29-2.png" alt="Galaxy Bound">
             <div class="ga-hero-content">
@@ -412,10 +400,8 @@ function gamehub_article_page() {
             </div>
         </div>
 
-        <!-- LAYOUT -->
         <div class="ga-layout">
 
-            <!-- CONTENIDO PRINCIPAL -->
             <div class="ga-main">
 
                 <p class="ga-intro">
@@ -458,10 +444,8 @@ function gamehub_article_page() {
 
             </div>
 
-            <!-- SIDEBAR -->
             <div class="ga-sidebar">
 
-                <!-- Noticias más leídas -->
                 <div class="ga-sidebar-card">
                     <div class="ga-sidebar-title">
                         <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
@@ -507,7 +491,6 @@ function gamehub_article_page() {
                     </div>
                 </div>
 
-                <!-- Videojuegos relacionados -->
                 <div class="ga-sidebar-card">
                     <div class="ga-sidebar-title">
                         <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5S14.67 12 15.5 12s1.5.67 1.5 1.5S16.33 15 15.5 15zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5S19.33 12 18.5 12z"/></svg>
