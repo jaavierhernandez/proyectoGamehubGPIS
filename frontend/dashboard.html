@@ -1,0 +1,641 @@
+function gamehub_dashboard() {
+    ob_start();
+	echo <<<HTML
+    <style>
+        /* ============================================
+           GAMEHUB DASHBOARD — Full redesign
+        ============================================ */
+
+        .is-layout-constrained,
+        .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+            max-width: 100% !important;
+        }
+
+        .site, .site-content, .content-area, .site-main,
+        .entry-content, .page-content {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #0a0c14 !important;
+            overflow-x: hidden;
+        }
+
+        /* Layout */
+        .ghd-wrap {
+            width: 100vw;
+            min-height: 100vh;
+            background: #0a0c14;
+            display: flex;
+            font-family: 'Segoe UI', sans-serif;
+            color: #e8eaf0;
+			font-size: 16px;
+			padding: 0 36px 36px;
+			margin-top: -80px;
+			gap: 36px;
+        }
+
+        /* ── Sidebar ── */
+        .ghd-sidebar {
+			width: 280px;
+			background: #0f1220;
+			border: 1px solid #1e2540;
+			padding: 0 16px 16px;
+			padding-top: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			flex-shrink: 0;
+			align-self: flex-start; /* ← esto evita que se estire */
+		}
+
+        .ghd-sidebar-logo {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #3a4060;
+            padding: 0 8px 20px;
+            border-bottom: 1px solid #1e2540;
+            margin-bottom: 10px;
+        }
+
+        .ghd-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #7a8099;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .ghd-nav-item svg {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+            stroke: currentColor;
+        }
+
+        .ghd-nav-item:hover {
+            background: #141828;
+            color: #e8eaf0;
+            text-decoration: none;
+        }
+
+        .ghd-nav-item.active {
+            background: rgba(26,111,255,0.12);
+            color: #1a6fff;
+            border-color: rgba(26,111,255,0.2);
+        }
+
+        .ghd-nav-item.active svg { stroke: #1a6fff; }
+
+        .ghd-nav-divider {
+            height: 1px;
+            background: #1e2540;
+            margin: 8px 0;
+        }
+
+        .ghd-nav-logout {
+            margin-top: auto;
+        }
+
+        .ghd-nav-item.danger { color: #7a8099; }
+        .ghd-nav-item.danger:hover { color: #ff4d6a; background: rgba(255,77,106,0.08); }
+
+        /* ── Main ── */
+        .ghd-main {
+            flex: 1;
+			padding: 0 32px 36px;
+            overflow-y: auto;
+            min-width: 0;
+        }
+
+        .ghd-page-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .ghd-page-title {
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .ghd-page-title-bar {
+            width: 3px;
+            height: 22px;
+            background: linear-gradient(180deg, #1a6fff, #00d4ff);
+            border-radius: 2px;
+        }
+
+        .ghd-count-badge {
+            font-size: 12px;
+            background: rgba(26,111,255,0.15);
+            color: #1a6fff;
+            border: 1px solid rgba(26,111,255,0.3);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* ── Vote Cards ── */
+        .ghd-votes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .ghd-vote-card {
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+        }
+
+        .ghd-vote-card:hover {
+            border-color: rgba(26,111,255,0.4);
+            box-shadow: 0 4px 20px rgba(26,111,255,0.1);
+            transform: translateX(3px);
+        }
+
+        .ghd-vote-rank {
+            font-size: 11px;
+            font-weight: 700;
+            color: #3a4060;
+            letter-spacing: 1px;
+            width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .ghd-vote-img {
+            width: 160px;
+            height: 96px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid #1e2540;
+        }
+
+        .ghd-vote-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ghd-vote-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ghd-vote-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 17px;
+            color: #f5a623;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .ghd-vote-rating svg {
+            width: 14px;
+            height: 14px;
+            fill: #f5a623;
+        }
+
+        .ghd-vote-link {
+            font-size: 15px;
+            color: #1a6fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+        }
+
+        .ghd-vote-link:hover { color: #00d4ff; text-decoration: none; }
+
+        .ghd-vote-link svg {
+            width: 11px;
+            height: 11px;
+            stroke: currentColor;
+        }
+
+        .ghd-vote-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .ghd-icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #141828;
+            border: 1px solid #1e2540;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .ghd-icon-btn svg { width: 14px; height: 14px; stroke: #7a8099; }
+        .ghd-icon-btn:hover { background: rgba(255,77,106,0.1); border-color: rgba(255,77,106,0.3); }
+        .ghd-icon-btn:hover svg { stroke: #ff4d6a; }
+
+        /* ── Section divider ── */
+        .ghd-section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #1e2540, transparent);
+            margin-bottom: 28px;
+        }
+
+        /* ── Profile Form ── */
+        .ghd-profile-card {
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ghd-profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #1a6fff, #00d4ff, #1a6fff, transparent);
+        }
+
+        .ghd-profile-title {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #3a4060;
+            margin-bottom: 20px;
+        }
+
+        .ghd-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .ghd-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .ghd-form-group.full { grid-column: 1 / -1; }
+
+        .ghd-form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #7a8099;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .ghd-form-input {
+            background: #141828;
+            border: 1px solid #1e2540;
+            border-radius: 8px;
+            padding: 13px 16px;
+            color: #e8eaf0;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .ghd-form-input:focus {
+            border-color: #1a6fff;
+            box-shadow: 0 0 0 3px rgba(26,111,255,0.1);
+        }
+
+        .ghd-form-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 4px;
+        }
+
+        .ghd-form-hint {
+            font-size: 12px;
+            color: #3a4060;
+        }
+
+        .ghd-btn-save {
+            padding: 13px 34px;
+            background: linear-gradient(135deg, #1a6fff, #00d4ff);
+            border: none;
+            border-radius: 8px;
+            color: #0a0c14;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.1s;
+            box-shadow: 0 4px 16px rgba(26,111,255,0.35);
+        }
+
+        .ghd-btn-save:hover {
+            box-shadow: 0 6px 24px rgba(26,111,255,0.55);
+            transform: translateY(-1px);
+        }
+
+        .ghd-btn-save:active { transform: translateY(0); }
+
+        /* ── Right panel ── */
+        .ghd-right {
+            width: 300px;
+			padding: 0 16px 36px 0;
+            flex-shrink: 0;
+        }
+
+        .ghd-panel {
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .ghd-panel-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #3a4060;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #1e2540;
+        }
+
+        .ghd-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: #7a8099;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            text-decoration: none;
+            margin-bottom: 4px;
+        }
+
+        .ghd-action-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            flex-shrink: 0;
+        }
+
+        .ghd-action-btn:hover {
+            background: #141828;
+            color: #e8eaf0;
+            border-color: #1e2540;
+            text-decoration: none;
+        }
+
+        .ghd-action-btn.danger:hover {
+            color: #ff4d6a;
+            background: rgba(255,77,106,0.08);
+            border-color: rgba(255,77,106,0.2);
+        }
+
+        .ghd-action-divider {
+            height: 1px;
+            background: #1e2540;
+            margin: 8px 0;
+        }
+
+        @media (max-width: 1100px) {
+            .ghd-right { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .ghd-sidebar { width: 60px; }
+            .ghd-sidebar .ghd-nav-item span,
+            .ghd-sidebar-logo { display: none; }
+            .ghd-form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <div class="ghd-wrap">
+
+        <!-- Sidebar -->
+        <aside class="ghd-sidebar">
+            <div class="ghd-sidebar-logo">GameHub</div>
+
+            <a href="#" class="ghd-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="ghd-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M6 2h12a2 2 0 0 1 2 2v16l-7-3-7 3V4a2 2 0 0 1 2-2z"/></svg>
+                <span>Catálogo</span>
+            </a>
+            <a href="#" class="ghd-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                <span>Mis Votos</span>
+            </a>
+            <a href="#" class="ghd-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <span>Mensajes</span>
+            </a>
+            <a href="#" class="ghd-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>Amigos</span>
+            </a>
+
+            <div class="ghd-nav-divider"></div>
+
+            <a href="#" class="ghd-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Ajustes</span>
+            </a>
+
+            <div class="ghd-nav-divider ghd-nav-logout"></div>
+
+            <a href="#" class="ghd-nav-item danger">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span>Cerrar Sesión</span>
+            </a>
+        </aside>
+
+        <!-- Main content -->
+        <main class="ghd-main">
+
+            <!-- Page header -->
+            <div class="ghd-page-header">
+                <div class="ghd-page-title-bar"></div>
+                <h1 class="ghd-page-title">Mis Votos</h1>
+                <span class="ghd-count-badge">3 juegos</span>
+            </div>
+
+            <!-- Vote list -->
+            <div class="ghd-votes-list">
+
+                <div class="ghd-vote-card">
+                    <div class="ghd-vote-rank">#1</div>
+                    <img class="ghd-vote-img" src="http://gamehub.local/wp-content/uploads/2026/05/galactic.png" alt="Galactic Pioneers">
+                    <div class="ghd-vote-info">
+                        <div class="ghd-vote-name">Galactic Pioneers</div>
+                        <div class="ghd-vote-rating">
+                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            9.2
+                        </div>
+                        <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ghd-vote-link">
+                            Ver juego
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                    <div class="ghd-vote-actions">
+                        <div class="ghd-icon-btn" title="Eliminar voto">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ghd-vote-card">
+                    <div class="ghd-vote-rank">#2</div>
+                    <img class="ghd-vote-img" src="http://gamehub.local/wp-content/uploads/2026/05/forja.png" alt="La Forja del Destino">
+                    <div class="ghd-vote-info">
+                        <div class="ghd-vote-name">La Forja del Destino</div>
+                        <div class="ghd-vote-rating">
+                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            8.8
+                        </div>
+                        <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ghd-vote-link">
+                            Ver juego
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                    <div class="ghd-vote-actions">
+                        <div class="ghd-icon-btn" title="Eliminar voto">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ghd-vote-card">
+                    <div class="ghd-vote-rank">#3</div>
+                    <img class="ghd-vote-img" src="http://gamehub.local/wp-content/uploads/2026/05/circulo.png" alt="El Círculo del Cielo">
+                    <div class="ghd-vote-info">
+                        <div class="ghd-vote-name">El Círculo del Cielo</div>
+                        <div class="ghd-vote-rating">
+                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            9.5
+                        </div>
+                        <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ghd-vote-link">
+                            Ver juego
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                    <div class="ghd-vote-actions">
+                        <div class="ghd-icon-btn" title="Eliminar voto">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="ghd-section-divider"></div>
+
+            <!-- Profile form -->
+            <div class="ghd-profile-card">
+                <div class="ghd-profile-title">Editar perfil</div>
+                <div class="ghd-form-grid">
+                    <div class="ghd-form-group">
+                        <label class="ghd-form-label">Nombre</label>
+                        <input type="text" class="ghd-form-input" value="Usuario123">
+                    </div>
+                    <div class="ghd-form-group">
+                        <label class="ghd-form-label">Email</label>
+                        <input type="email" class="ghd-form-input" value="xxx@gmail.com">
+                    </div>
+                    <div class="ghd-form-group">
+                        <label class="ghd-form-label">Contraseña nueva</label>
+                        <input type="password" class="ghd-form-input" placeholder="••••••••">
+                    </div>
+                    <div class="ghd-form-group">
+                        <label class="ghd-form-label">Confirmar contraseña</label>
+                        <input type="password" class="ghd-form-input" placeholder="••••••••">
+                    </div>
+                </div>
+                <div class="ghd-form-footer">
+                    <span class="ghd-form-hint">Los cambios se aplican inmediatamente</span>
+                    <button class="ghd-btn-save">Guardar cambios</button>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Right panel -->
+        <aside class="ghd-right">
+            <div class="ghd-panel">
+                <div class="ghd-panel-title">Acciones rápidas</div>
+
+                <a href="#" class="ghd-action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Editar perfil
+                </a>
+                <a href="#" class="ghd-action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    Cambiar contraseña
+                </a>
+                <a href="#" class="ghd-action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Historial de votos
+                </a>
+                <a href="#" class="ghd-action-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    Juegos favoritos
+				</a>
+            </div>
+        </aside>
+
+    </div>
+HTML;
+    return ob_get_clean();
+}
+add_shortcode('gamehub_dashboard', 'gamehub_dashboard');
