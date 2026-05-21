@@ -1,0 +1,554 @@
+function gamehub_article_page() {
+    ob_start();
+    echo <<<HTML
+    <style>
+	
+		.wp-block-group, .wp-block-template-part {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        body.page .entry-content.alignfull,
+        body.page .wp-block-post-content,
+        body.page .has-global-padding,
+        body.page [style*="padding-top"],
+        body.page [style*="padding-bottom"] {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        body.page .site-content,
+        body.page #content,
+        body.page .entry-content,
+        body.page main,
+        body.page #main {
+            background: #0a0c14 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+	
+        .ga-wrapper {
+            font-family: sans-serif;
+            background: #0a0c14;
+            color: #e8eaf0;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            margin-left: calc(-50vw + 50%) !important;
+            margin-right: calc(-50vw + 50%) !important;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        /* HERO */
+        .ga-hero {
+			position: relative;
+			height: 600px;
+			overflow: hidden;
+		}
+		.ga-hero img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center 20%;
+			transform: scale(0.9);
+			transform-origin: center center;
+		}
+		.ga-hero-content {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			padding: 32px 48px;
+			z-index: 2;
+		}
+        .ga-category-tag {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            background: rgba(0,212,255,0.12);
+            border: 1px solid rgba(0,212,255,0.3);
+            color: #00d4ff;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        .ga-hero-title {
+            font-size: clamp(24px, 3.5vw, 48px);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            line-height: 1.1;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+            margin-bottom: 14px;
+            max-width: 800px;
+        }
+        .ga-hero-title span { color: #00d4ff; }
+        .ga-hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
+            color: #7a8099;
+        }
+        .ga-hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ga-hero-meta-item svg {
+            width: 14px;
+            height: 14px;
+            fill: #4a5280;
+            flex-shrink: 0;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .ga-layout {
+			display: grid;
+			grid-template-columns: 1fr 480px;
+			gap: 48px;
+			padding: 40px 24px 60px 48px;
+			max-width: 100%;
+			margin: 0 auto;
+		}
+
+        /* CONTENIDO PRINCIPAL */
+        .ga-main {}
+
+        .ga-intro {
+			font-size: 20px;
+			color: #c0c8e0;
+			line-height: 1.8;
+			margin-bottom: 32px;
+			padding-bottom: 32px;
+			border-bottom: 1px solid #1e2540;
+		}
+
+        /* CAMBIO 1: content-grid con altura fija igual a la imagen */
+        .ga-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+            align-items: stretch;
+        }
+
+        .ga-content-img {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #1e2540;
+        }
+        .ga-content-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        .ga-content-img:hover img { transform: scale(1.05); }
+
+        /* CAMBIO 1: el texto ocupa todo el alto y distribuye los bullets */
+        .ga-content-text {
+            font-size: 15px;
+            color: #a0a8be;
+            line-height: 1.8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .ga-section-title {
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #00d4ff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ga-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #1e2540, transparent);
+        }
+
+        /* CAMBIO 1: bullets más grandes para ocupar el alto disponible */
+        .ga-bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-bottom: 24px;
+            flex: 1;
+            justify-content: space-around;
+        }
+        .ga-bullet-list li {
+            font-size: 16px;
+            color: #c0c8e0;
+            line-height: 1.6;
+            padding: 14px 14px 14px 22px;
+            position: relative;
+            border-bottom: 1px solid #1a1e30;
+        }
+        .ga-bullet-list li:last-child { border-bottom: none; }
+        .ga-bullet-list li::before {
+            content: '›';
+            position: absolute;
+            left: 4px;
+            top: 14px;
+            color: #00d4ff;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 1.3;
+        }
+
+        .ga-body-text {
+			font-size: 18px;
+			color: #a0a8be;
+			line-height: 1.8;
+			margin-bottom: 24px;
+		}
+
+        /* CAMBIO 3: quotes más grandes */
+        .ga-quote {
+            border-left: 3px solid #00d4ff;
+            padding: 20px 24px;
+            margin: 28px 0;
+            background: rgba(0,212,255,0.04);
+            border-radius: 0 8px 8px 0;
+        }
+        .ga-quote p {
+            font-size: 18px;
+            color: #c0c8e0;
+            line-height: 1.8;
+            font-style: italic;
+            margin-bottom: 12px;
+        }
+        .ga-quote cite {
+            font-size: 13px;
+            color: #00d4ff;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-style: normal;
+        }
+
+        /* SIDEBAR */
+        .ga-sidebar {
+			display: flex;
+			flex-direction: column;
+			gap: 24px;
+			padding-right: 24px;
+		}
+
+        .ga-sidebar-card {
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .ga-sidebar-title {
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #1e2540;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ga-sidebar-title svg {
+            width: 16px;
+            height: 16px;
+            fill: #00d4ff;
+            flex-shrink: 0;
+        }
+
+        /* Noticias relacionadas */
+        .ga-related-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .ga-related-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .ga-related-item:hover { opacity: 0.75; }
+        .ga-related-thumb {
+            width: 90px;
+            height: 66px;
+            border-radius: 6px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid #1e2540;
+        }
+        .ga-related-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .ga-related-info {}
+        .ga-related-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #e8eaf0;
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+        .ga-related-meta {
+            font-size: 11px;
+            color: #4a5280;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ga-related-meta svg {
+            width: 10px;
+            height: 10px;
+            fill: #4a5280;
+        }
+
+        /* Juegos relacionados */
+        .ga-games-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .ga-game-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #1e2540;
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .ga-game-item:hover {
+            border-color: #1a6fff;
+            transform: translateY(-2px);
+        }
+        /* CAMBIO 3: imágenes de juegos más altas */
+        .ga-game-item img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+        }
+        .ga-game-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10,12,20,0.9) 0%, transparent 55%);
+        }
+        .ga-game-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            z-index: 2;
+        }
+        .ga-game-name {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+        .ga-game-rating {
+            font-size: 11px;
+            color: #f5a623;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        @media (max-width: 900px) {
+            .ga-layout { grid-template-columns: 1fr; padding: 24px 20px 40px; }
+            .ga-hero-content { padding: 20px 20px; }
+            .ga-content-grid { grid-template-columns: 1fr; }
+            .ga-hero { height: 320px; }
+        }
+    </style>
+
+    <div class="ga-wrapper">
+
+        <!-- HERO -->
+        <div class="ga-hero">
+            <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-19-may-2026-22_14_29-2.png" alt="Galaxy Bound">
+            <div class="ga-hero-content">
+                <span class="ga-category-tag">Expansión</span>
+                <h1 class="ga-hero-title">Galaxy Bound: El Próximo Capítulo.<br><span>Una Odisea Espacial Expandida.</span></h1>
+                <div class="ga-hero-meta">
+                    <div class="ga-hero-meta-item">
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/></svg>
+                        Por: NovaScout
+                    </div>
+                    <div class="ga-hero-meta-item">
+                        <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                        Fecha: 1 de Mayo 2026
+                    </div>
+                    <div class="ga-hero-meta-item">
+                        <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        3 vistas
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LAYOUT -->
+        <div class="ga-layout">
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <div class="ga-main">
+
+                <p class="ga-intro">
+                    Un nuevo y emocionante capítulo para nuestra odisea espacial. Explora las últimas características y descubrimientos en el rincón más inexplorado del cosmos. Nos adentramos en nuevas fronteras con desafíos únicos y tecnología de vanguardia.
+                </p>
+
+                <div class="ga-content-grid">
+                    <div class="ga-content-img">
+                        <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-19-may-2026-22_14_29-2.png" alt="Galaxy Bound expansión">
+                    </div>
+                    <div class="ga-content-text">
+                        <div class="ga-section-title">Expansión de historia</div>
+                        <ul class="ga-bullet-list">
+                            <li>Nuevas misiones de historia para explorar nuevos horizontes en la odisea espacial.</li>
+                            <li>Se añaden naves adicionales con características únicas para capitanes intrépidos.</li>
+                            <li>Se amplía el mapa estelar con más sistemas y desafíos para descubrir.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ga-section-title">Nueva expansión de historia</div>
+                <p class="ga-body-text">
+                    El juego principal sigue expandiéndose con nuevo contenido y mejoras de equilibrio. Esta actualización, denominada 'Galaxy Bound 1.3', introduce características muy solicitadas por la comunidad. Se han añadido nuevos tipos de misiones, naves re-equilibradas y una interfaz de usuario mejorada para una experiencia de juego más inmersiva. El sistema de combate espacial también ha sido revisado.
+                </p>
+
+                <div class="ga-section-title">Actualizaciones de nuestras plataformas</div>
+                <p class="ga-body-text">
+                    Un nuevo y emocionante capítulo para nuestra odisea espacial. Explora las últimas características y descubrimientos en el rincón más inexplorado del cosmos. Nos adentramos en nuevas fronteras con desafíos únicos y tecnología de vanguardia.
+                </p>
+
+                <div class="ga-quote">
+                    <p>"La odisea espacial está más viva que nunca, con más para ver, hacer y conquistar. Esta expansión es un hito para nosotros y para todos los que viajan entre las estrellas."</p>
+                    <cite>— Nova Scout</cite>
+                </div>
+
+                <div class="ga-quote">
+                    <p>"Con cada actualización, el juego evoluciona para convertirse en la experiencia espacial definitiva que siempre imaginamos. No podemos esperar a que los jugadores exploren lo nuevo."</p>
+                    <cite>— Equipo de Desarrollo</cite>
+                </div>
+
+            </div>
+
+            <!-- SIDEBAR -->
+            <div class="ga-sidebar">
+
+                <!-- Noticias más leídas -->
+                <div class="ga-sidebar-card">
+                    <div class="ga-sidebar-title">
+                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        Noticias más leídas
+                    </div>
+                    <div class="ga-related-list">
+                        <a href="http://gamehub.local/pagina-de-noticias/" class="ga-related-item" style="text-decoration:none;">
+                            <div class="ga-related-thumb">
+                                <img src="http://gamehub.local/wp-content/uploads/2026/05/forja.png" alt="Galaxy Bound 1.3">
+                            </div>
+                            <div class="ga-related-info">
+                                <div class="ga-related-title">LA FORJA DEL DESTINO: NUEVA TEMPORADA OSCURA</div>
+                                <div class="ga-related-meta">
+                                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                    8 vistas · 12 de mayo 2026
+                                </div>
+                            </div>
+                        </a>
+                        <a href="http://gamehub.local/pagina-de-noticias/" class="ga-related-item" style="text-decoration:none;">
+                            <div class="ga-related-thumb">
+                                <img src="http://gamehub.local/wp-content/uploads/2026/05/cyber.png" alt="Cyber Samurai">
+                            </div>
+                            <div class="ga-related-info">
+                                <div class="ga-related-title">CYBER-SAMURAI 2077: NUEVO PARCHE 3.5</div>
+                                <div class="ga-related-meta">
+                                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                    6 vistas · 8 de mayo 2026
+                                </div>
+                            </div>
+                        </a>
+                        <a href="http://gamehub.local/pagina-de-noticias/" class="ga-related-item" style="text-decoration:none;">
+                            <div class="ga-related-thumb">
+                                <img src="http://gamehub.local/wp-content/uploads/2026/05/circulo.png" alt="Resurgence Racing">
+                            </div>
+                            <div class="ga-related-info">
+                                <div class="ga-related-title">EL CÍRCULO DEL CIELO: NUEVA EXPANSIÓN EN JUNIO</div>
+                                <div class="ga-related-meta">
+                                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                    4 vistas · 10 de mayo 2026
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Videojuegos relacionados -->
+                <div class="ga-sidebar-card">
+                    <div class="ga-sidebar-title">
+                        <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5S14.67 12 15.5 12s1.5.67 1.5 1.5S16.33 15 15.5 15zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5S19.33 12 18.5 12z"/></svg>
+                        Videojuegos relacionados
+                    </div>
+                    <div class="ga-games-grid">
+                        <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ga-game-item" style="text-decoration:none;">
+                            <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-19-may-2026-22_14_29-2.png" alt="Galaxy Bound">
+                            <div class="ga-game-info">
+                                <div class="ga-game-name">Galaxy Bound</div>
+                                <div class="ga-game-rating">★★★★ 4.8</div>
+                            </div>
+                        </a>
+                        <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ga-game-item" style="text-decoration:none;">
+                            <img src="http://gamehub.local/wp-content/uploads/2026/05/galactic.png" alt="Starship Adventures">
+                            <div class="ga-game-info">
+                                <div class="ga-game-name">Starship Adventures</div>
+                                <div class="ga-game-rating">★★★★ 4.5</div>
+                            </div>
+                        </a>
+                        <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ga-game-item" style="text-decoration:none;">
+                            <img src="http://gamehub.local/wp-content/uploads/2026/05/spellbound.png" alt="Spellbound: Avance">
+                            <div class="ga-game-info">
+                                <div class="ga-game-name">Spellbound</div>
+                                <div class="ga-game-rating">★★★★ 4.0</div>
+                            </div>
+                        </a>
+                        <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ga-game-item" style="text-decoration:none;">
+                            <img src="http://gamehub.local/wp-content/uploads/2026/05/mech.png" alt="Cybernetic Rise">
+                            <div class="ga-game-info">
+                                <div class="ga-game-name">Cybernetic Rise</div>
+                                <div class="ga-game-rating">★★★★ 3.8</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+HTML;
+    return ob_get_clean();
+}
+add_shortcode('gamehub_article', 'gamehub_article_page');
