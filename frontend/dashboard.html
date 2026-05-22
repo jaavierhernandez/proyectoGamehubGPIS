@@ -2,10 +2,7 @@ function gamehub_dashboard() {
     ob_start();
 	echo <<<HTML
     <style>
-        /* ============================================
-           GAMEHUB DASHBOARD — Full redesign
-        ============================================ */
-
+        
         .is-layout-constrained,
         .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
             max-width: 100% !important;
@@ -26,7 +23,6 @@ function gamehub_dashboard() {
             overflow-x: hidden;
         }
 
-        /* Layout */
         .ghd-wrap {
             width: 100vw;
             min-height: 100vh;
@@ -40,7 +36,6 @@ function gamehub_dashboard() {
 			gap: 36px;
         }
 
-        /* ── Sidebar ── */
         .ghd-sidebar {
 			width: 280px;
 			background: #0f1220;
@@ -114,7 +109,6 @@ function gamehub_dashboard() {
         .ghd-nav-item.danger { color: #7a8099; }
         .ghd-nav-item.danger:hover { color: #ff4d6a; background: rgba(255,77,106,0.08); }
 
-        /* ── Main ── */
         .ghd-main {
             flex: 1;
 			padding: 0 32px 36px;
@@ -154,7 +148,6 @@ function gamehub_dashboard() {
             font-weight: 600;
         }
 
-        /* ── Vote Cards ── */
         .ghd-votes-list {
             display: flex;
             flex-direction: column;
@@ -270,14 +263,12 @@ function gamehub_dashboard() {
         .ghd-icon-btn:hover { background: rgba(255,77,106,0.1); border-color: rgba(255,77,106,0.3); }
         .ghd-icon-btn:hover svg { stroke: #ff4d6a; }
 
-        /* ── Section divider ── */
         .ghd-section-divider {
             height: 1px;
             background: linear-gradient(90deg, transparent, #1e2540, transparent);
             margin-bottom: 28px;
         }
 
-        /* ── Profile Form ── */
         .ghd-profile-card {
             background: #0f1220;
             border: 1px solid #1e2540;
@@ -379,7 +370,6 @@ function gamehub_dashboard() {
 
         .ghd-btn-save:active { transform: translateY(0); }
 
-        /* ── Right panel ── */
         .ghd-right {
             width: 300px;
 			padding: 0 16px 36px 0;
@@ -461,7 +451,6 @@ function gamehub_dashboard() {
 
     <div class="ghd-wrap">
 
-        <!-- Sidebar -->
         <aside class="ghd-sidebar">
             <div class="ghd-sidebar-logo">GameHub</div>
 
@@ -501,17 +490,14 @@ function gamehub_dashboard() {
             </a>
         </aside>
 
-        <!-- Main content -->
         <main class="ghd-main">
 
-            <!-- Page header -->
             <div class="ghd-page-header">
                 <div class="ghd-page-title-bar"></div>
                 <h1 class="ghd-page-title">Mis Votos</h1>
                 <span class="ghd-count-badge">3 juegos</span>
             </div>
 
-            <!-- Vote list -->
             <div class="ghd-votes-list">
 
                 <div class="ghd-vote-card">
@@ -581,7 +567,6 @@ function gamehub_dashboard() {
 
             <div class="ghd-section-divider"></div>
 
-            <!-- Profile form -->
             <div class="ghd-profile-card">
                 <div class="ghd-profile-title">Editar perfil</div>
                 <div class="ghd-form-grid">
@@ -610,7 +595,6 @@ function gamehub_dashboard() {
 
         </main>
 
-        <!-- Right panel -->
         <aside class="ghd-right">
             <div class="ghd-panel">
                 <div class="ghd-panel-title">Acciones rápidas</div>
