@@ -1,0 +1,806 @@
+function gamehub_admin_dashboard_shortcode() {
+    ob_start();
+	echo <<<HTML
+    <style>
+        .is-layout-constrained,
+        .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+            max-width: 100% !important;
+        }
+
+        .site, .site-content, .content-area, .site-main,
+        .entry-content, .page-content {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #0a0c14 !important;
+            overflow-x: hidden;
+        }
+
+        .gha-wrap {
+            width: 100vw;
+            min-height: 100vh;
+            background: #0a0c14;
+            display: flex;
+            font-family: 'Segoe UI', sans-serif;
+            color: #e8eaf0;
+            margin-top: -80px;
+        }
+
+        .gha-sidebar {
+            width: 280px;
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            padding: 24px 18px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-shrink: 0;
+            align-self: flex-start;
+        }
+
+        .gha-sidebar-label {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #3a4060;
+            padding: 0 8px 16px;
+            border-bottom: 1px solid #1e2540;
+            margin-bottom: 10px;
+        }
+
+        .gha-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 12px 15px;
+            border-radius: 9px;
+            text-decoration: none;
+            color: #7a8099;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .gha-nav-item svg {
+            width: 19px;
+            height: 19px;
+            flex-shrink: 0;
+            stroke: currentColor;
+        }
+
+        .gha-nav-item:hover {
+            background: #141828;
+            color: #e8eaf0;
+            text-decoration: none;
+        }
+
+        .gha-nav-item.active {
+            background: rgba(26,111,255,0.12);
+            color: #1a6fff;
+            border-color: rgba(26,111,255,0.2);
+        }
+
+        .gha-nav-item.active svg { stroke: #1a6fff; }
+
+        .gha-nav-section {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #1a6fff;
+            padding: 16px 8px 8px;
+        }
+
+        .gha-nav-divider {
+            height: 1px;
+            background: #1e2540;
+            margin: 8px 0;
+        }
+
+        .gha-quick-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #1e2540;
+            background: #141828;
+            color: #e8eaf0;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .gha-quick-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+        }
+
+        .gha-quick-btn:hover { background: #1a2040; border-color: #1a6fff; color: #1a6fff; }
+        .gha-quick-btn.danger { border-color: rgba(255,77,106,0.3); background: rgba(255,77,106,0.07); color: #ff4d6a; }
+        .gha-quick-btn.danger:hover { background: rgba(255,77,106,0.15); }
+
+        .gha-main {
+            flex: 1;
+            padding: 0px 28px 40px;
+            overflow-y: auto;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .gha-page-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .gha-page-title-bar {
+            width: 4px;
+            height: 26px;
+            background: linear-gradient(180deg, #1a6fff, #00d4ff);
+            border-radius: 2px;
+        }
+
+        .gha-page-title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .gha-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .gha-stat-card {
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .gha-stat-card:hover {
+            border-color: rgba(26,111,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .gha-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+        }
+
+        .gha-stat-card.blue::before   { background: linear-gradient(90deg, #1a6fff, #00d4ff); }
+        .gha-stat-card.purple::before { background: linear-gradient(90deg, #7b2fff, #a855f7); }
+        .gha-stat-card.orange::before { background: linear-gradient(90deg, #f5a623, #ff6b35); }
+        .gha-stat-card.green::before  { background: linear-gradient(90deg, #00c853, #69f0ae); }
+
+        .gha-stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .gha-stat-icon svg { width: 21px; height: 21px; stroke: currentColor; }
+        .gha-stat-icon.blue   { background: rgba(26,111,255,0.15); color: #1a6fff; }
+        .gha-stat-icon.purple { background: rgba(123,47,255,0.15); color: #a855f7; }
+        .gha-stat-icon.orange { background: rgba(245,166,35,0.15);  color: #f5a623; }
+        .gha-stat-icon.green  { background: rgba(0,200,83,0.15);    color: #00c853; }
+
+        .gha-stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #5a6480;
+            margin-bottom: 8px;
+        }
+
+        .gha-stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .gha-stat-trend {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .gha-stat-trend.up   { color: #00c853; }
+        .gha-stat-trend.down { color: #ff4d6a; }
+        .gha-stat-trend.warn { color: #f5a623; }
+
+        .gha-middle {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 16px;
+		}
+
+        .gha-box {
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .gha-box-title {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #7a8099;
+            margin-bottom: 18px;
+        }
+
+        .gha-chart-area {
+            position: relative;
+            height: 220px;
+            background: #0a0e1a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .gha-chart-area svg {
+            width: 100%;
+            height: 175px;
+            margin-top: 14px;
+        }
+
+        .gha-chart-grid {
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .gha-chart-grid:nth-child(1) { top: 28px; }
+        .gha-chart-grid:nth-child(2) { top: 68px; }
+        .gha-chart-grid:nth-child(3) { top: 108px; }
+        .gha-chart-grid:nth-child(4) { top: 148px; }
+
+        .gha-chart-months {
+            position: absolute;
+            bottom: 8px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            color: #3a4060;
+            font-size: 12px;
+        }
+
+        .gha-donut-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+			background: #0a0e1a;
+			border-radius: 10px;
+			padding: 20px;
+        }
+
+        .gha-donut {
+            width: 145px;
+            height: 145px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #1a6fff 0% 45%,
+                #7b2fff 45% 75%,
+                #00c853 75% 90%,
+                #f5a623 90% 100%
+            );
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .gha-donut::after {
+            content: "";
+            position: absolute;
+            inset: 35px;
+            background: #0f1220;
+            border-radius: 50%;
+        }
+
+        .gha-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .gha-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 14px;
+            color: #7a8099;
+        }
+
+        .gha-legend-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .gha-activity {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .gha-activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            padding: 18px 16px;
+            background: #0a0e1a;
+            border-radius: 8px;
+            border: 1px solid #1e2540;
+        }
+
+        .gha-activity-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .gha-activity-text {}
+
+        .gha-activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #c8d4ee;
+            line-height: 1.3;
+            margin-bottom: 3px;
+        }
+
+        .gha-activity-desc {
+            font-size: 13px;
+            color: #4a5280;
+            line-height: 1.4;
+        }
+
+        .gha-activity-time {
+            font-size: 11px;
+            color: #3a4060;
+            margin-top: 4px;
+        }
+
+        .gha-table-box {
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            border-radius: 12px;
+            padding: 22px 26px;
+        }
+
+        .gha-table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .gha-table-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #7a8099;
+        }
+
+        .gha-view-all {
+            font-size: 13px;
+            color: #1a6fff;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .gha-view-all:hover { color: #00d4ff; text-decoration: none; }
+
+        .gha-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .gha-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #3a4060;
+            border-bottom: 1px solid #1e2540;
+        }
+
+        .gha-table td {
+            padding: 15px 14px;
+            font-size: 14px;
+            color: #c8d4ee;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            vertical-align: middle;
+        }
+
+        .gha-table tr:last-child td { border-bottom: none; }
+        .gha-table tr:hover td { background: rgba(26,111,255,0.03); }
+
+        .gha-role {
+            padding: 4px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .gha-role.user   { background: rgba(26,111,255,0.15);  color: #5b9fff; }
+        .gha-role.mod    { background: rgba(123,47,255,0.15);  color: #b07dff; }
+        .gha-role.admin  { background: rgba(255,77,106,0.15);  color: #ff7d93; }
+
+        .gha-status-active { color: #00c853; font-size: 14px; font-weight: 600; }
+        .gha-status-ban    { color: #ff4d6a; font-size: 14px; font-weight: 600; }
+
+        .gha-row-email { color: #3a4060; font-size: 13px; }
+        .gha-row-date  { color: #3a4060; font-size: 13px; }
+
+        .gha-actions { display: flex; gap: 6px; }
+
+        .gha-action-btn {
+            width: 33px;
+            height: 33px;
+            border-radius: 7px;
+            background: #141828;
+            border: 1px solid #1e2540;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .gha-action-btn svg { width: 14px; height: 14px; stroke: #7a8099; }
+        .gha-action-btn:hover { background: #1a2040; border-color: #1a6fff; }
+        .gha-action-btn:hover svg { stroke: #1a6fff; }
+        .gha-action-btn.del:hover { background: rgba(255,77,106,0.1); border-color: rgba(255,77,106,0.3); }
+        .gha-action-btn.del:hover svg { stroke: #ff4d6a; }
+
+        @media (max-width: 1200px) {
+            .gha-stats { grid-template-columns: repeat(2, 1fr); }
+            .gha-middle { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .gha-wrap { flex-direction: column; }
+            .gha-sidebar { width: 100%; }
+            .gha-stats { grid-template-columns: repeat(2, 1fr); }
+            .gha-middle { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <div class="gha-wrap">
+
+        <aside class="gha-sidebar">
+            <div class="gha-sidebar-label">Admin Panel</div>
+
+            <a href="#" class="gha-nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+            </a>
+            <a href="#" class="gha-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Gestionar usuarios
+            </a>
+            <a href="#" class="gha-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Moderar contenido
+            </a>
+            <a href="#" class="gha-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                Gestionar juegos
+            </a>
+            <a href="#" class="gha-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                Categorías
+            </a>
+            <a href="#" class="gha-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Reportes
+            </a>
+            <a href="#" class="gha-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Reseñas
+            </a>
+            <a href="#" class="gha-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Comentarios
+            </a>
+            <a href="#" class="gha-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                Banners
+            </a>
+            <a href="#" class="gha-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Configuración
+            </a>
+            <a href="#" class="gha-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Logs del sistema
+            </a>
+
+            <div class="gha-nav-section">Accesos rápidos</div>
+
+            <div class="gha-quick-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Añadir juego
+            </div>
+            <div class="gha-quick-btn" style="margin-top:6px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Crear usuario
+            </div>
+            <div class="gha-quick-btn danger" style="margin-top:6px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Revisar reportes
+            </div>
+        </aside>
+
+        <main class="gha-main">
+
+            <div class="gha-page-header">
+                <div class="gha-page-title-bar"></div>
+                <h1 class="gha-page-title">Admin Dashboard</h1>
+            </div>
+
+            <div class="gha-stats">
+                <div class="gha-stat-card blue">
+                    <div class="gha-stat-icon blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div class="gha-stat-label">Usuarios</div>
+                    <div class="gha-stat-value">1.245</div>
+                    <div class="gha-stat-trend up">↑ +12.5% este mes</div>
+                </div>
+                <div class="gha-stat-card purple">
+                    <div class="gha-stat-icon purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    </div>
+                    <div class="gha-stat-label">Juegos</div>
+                    <div class="gha-stat-value">325</div>
+                    <div class="gha-stat-trend up">↑ +8.1% este mes</div>
+                </div>
+                <div class="gha-stat-card orange">
+                    <div class="gha-stat-icon orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <div class="gha-stat-label">Reportes</div>
+                    <div class="gha-stat-value">18</div>
+                    <div class="gha-stat-trend down">↓ -25% este mes</div>
+                </div>
+                <div class="gha-stat-card green">
+                    <div class="gha-stat-icon green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div class="gha-stat-label">Comentarios</div>
+                    <div class="gha-stat-value">9.842</div>
+                    <div class="gha-stat-trend up">↑ +5.3% este mes</div>
+                </div>
+            </div>
+
+            <div class="gha-middle">
+
+				<div class="gha-box" style="display:flex; flex-direction:column; gap:16px;">
+					<div>
+						<div class="gha-box-title">Usuarios registrados</div>
+						<div class="gha-chart-area">
+							<div class="gha-chart-grid"></div>
+							<div class="gha-chart-grid"></div>
+							<div class="gha-chart-grid"></div>
+							<div class="gha-chart-grid"></div>
+							<svg viewBox="0 0 400 160" preserveAspectRatio="none">
+								<defs>
+									<linearGradient id="gha-grad" x1="0" y1="0" x2="0" y2="1">
+										<stop offset="0%" stop-color="#1a6fff" stop-opacity="0.3"/>
+										<stop offset="100%" stop-color="#1a6fff" stop-opacity="0"/>
+									</linearGradient>
+								</defs>
+								<polygon fill="url(#gha-grad)" points="20,140 80,100 140,85 200,95 260,62 320,35 380,12 380,160 20,160"/>
+								<polyline fill="none" stroke="#1a6fff" stroke-width="2.5" stroke-linejoin="round" points="20,140 80,100 140,85 200,95 260,62 320,35 380,12"/>
+								<circle cx="380" cy="12" r="4" fill="#00d4ff"/>
+							</svg>
+							<div class="gha-chart-months">
+								<span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="gha-box-title">Plataformas más usadas</div>
+						<div class="gha-donut-wrap">
+							<div class="gha-donut"></div>
+							<div class="gha-legend">
+								<div class="gha-legend-item"><div class="gha-legend-dot" style="background:#1a6fff;"></div> PC — 45%</div>
+								<div class="gha-legend-item"><div class="gha-legend-dot" style="background:#7b2fff;"></div> PS5 — 30%</div>
+								<div class="gha-legend-item"><div class="gha-legend-dot" style="background:#00c853;"></div> Xbox — 15%</div>
+								<div class="gha-legend-item"><div class="gha-legend-dot" style="background:#f5a623;"></div> Switch — 10%</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="gha-box">
+					<div class="gha-box-title">Actividad reciente</div>
+					<div class="gha-activity">
+						<div class="gha-activity-item">
+							<div class="gha-activity-dot" style="background:#00c853; margin-top:4px;"></div>
+							<div class="gha-activity-text">
+								<div class="gha-activity-title">Nuevo usuario registrado</div>
+								<div class="gha-activity-desc">AlexGamer23 se unió a la plataforma</div>
+								<div class="gha-activity-time">Hace 5 minutos</div>
+							</div>
+						</div>
+						<div class="gha-activity-item">
+							<div class="gha-activity-dot" style="background:#1a6fff; margin-top:4px;"></div>
+							<div class="gha-activity-text">
+								<div class="gha-activity-title">Nuevo juego agregado</div>
+								<div class="gha-activity-desc">"Cyber Legends" se ha agregado al catálogo</div>
+								<div class="gha-activity-time">Hace 15 minutos</div>
+							</div>
+						</div>
+						<div class="gha-activity-item">
+							<div class="gha-activity-dot" style="background:#f5a623; margin-top:4px;"></div>
+							<div class="gha-activity-text">
+								<div class="gha-activity-title">Reporte recibido</div>
+								<div class="gha-activity-desc">Reporte en el juego "Brutal Fighter"</div>
+								<div class="gha-activity-time">Hace 38 minutos</div>
+							</div>
+						</div>
+						<div class="gha-activity-item">
+							<div class="gha-activity-dot" style="background:#7b2fff; margin-top:4px;"></div>
+							<div class="gha-activity-text">
+								<div class="gha-activity-title">Nueva reseña</div>
+								<div class="gha-activity-desc">"LA FORJA DEL DESTINO" recibió una nueva reseña</div>
+								<div class="gha-activity-time">Hace 45 minutos</div>
+							</div>
+						</div>
+						<div class="gha-activity-item">
+							<div class="gha-activity-dot" style="background:#ff4d6a; margin-top:4px;"></div>
+							<div class="gha-activity-text">
+								<div class="gha-activity-title">Usuario suspendido</div>
+								<div class="gha-activity-desc">ToxicUser24 ha sido suspendido</div>
+								<div class="gha-activity-time">Hace 1 hora</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+            <div class="gha-table-box">
+                <div class="gha-table-header">
+                    <div class="gha-table-title">Usuarios recientes</div>
+                    <a href="#" class="gha-view-all">Ver todos →</a>
+                </div>
+                <table class="gha-table">
+                    <thead>
+                        <tr>
+                            <th style="width:16%">Usuario</th>
+                            <th style="width:22%">Email</th>
+                            <th style="width:13%">Rol</th>
+                            <th style="width:13%">Estado</th>
+                            <th style="width:14%">Registro</th>
+                            <th style="width:14%">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>AlexGamer23</td>
+                            <td class="gha-row-email">alex@gmail.com</td>
+                            <td><span class="gha-role user">Usuario</span></td>
+                            <td class="gha-status-active">● Activo</td>
+                            <td class="gha-row-date">22/04/2026</td>
+                            <td>
+                                <div class="gha-actions">
+                                    <div class="gha-action-btn" title="Ver"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                                    <div class="gha-action-btn" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                                    <div class="gha-action-btn del" title="Suspender"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ShadowWar</td>
+                            <td class="gha-row-email">shadow@gmail.com</td>
+                            <td><span class="gha-role mod">Moderador</span></td>
+                            <td class="gha-status-active">● Activo</td>
+                            <td class="gha-row-date">21/04/2026</td>
+                            <td>
+                                <div class="gha-actions">
+                                    <div class="gha-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                                    <div class="gha-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                                    <div class="gha-action-btn del"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>UltraPlayer</td>
+                            <td class="gha-row-email">ultra@gmail.com</td>
+                            <td><span class="gha-role user">Usuario</span></td>
+                            <td class="gha-status-active">● Activo</td>
+                            <td class="gha-row-date">20/05/2026</td>
+                            <td>
+                                <div class="gha-actions">
+                                    <div class="gha-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                                    <div class="gha-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                                    <div class="gha-action-btn del"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>GameMaster</td>
+                            <td class="gha-row-email">master@gmail.com</td>
+                            <td><span class="gha-role admin">Admin</span></td>
+                            <td class="gha-status-active">● Activo</td>
+                            <td class="gha-row-date">18/05/2026</td>
+                            <td>
+                                <div class="gha-actions">
+                                    <div class="gha-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                                    <div class="gha-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                                    <div class="gha-action-btn del"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ToxicUser24</td>
+                            <td class="gha-row-email">toxic24@gmail.com</td>
+                            <td><span class="gha-role user">Usuario</span></td>
+                            <td class="gha-status-ban">● Suspendido</td>
+                            <td class="gha-row-date">17/05/2026</td>
+                            <td>
+                                <div class="gha-actions">
+                                    <div class="gha-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                                    <div class="gha-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                                    <div class="gha-action-btn del"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+
+    </div>
+HTML;
+    return ob_get_clean();
+}
+add_shortcode('gamehub_admin_dashboard', 'gamehub_admin_dashboard_shortcode');
