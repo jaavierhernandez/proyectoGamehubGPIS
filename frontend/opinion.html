@@ -1,0 +1,658 @@
+add_shortcode('gamehub_blog_post', function() {
+    ob_start();
+    echo <<<HTML
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;800&display=swap');
+		
+		.wp-site-blocks {
+			padding-bottom: 0 !important;
+		}
+
+		body {
+			margin-bottom: 0 !important;
+			padding-bottom: 0 !important;
+		}
+		
+		.wp-block-post-content {
+			padding-bottom: 0 !important;
+		}
+
+		footer, .site-footer {
+			margin-top: 0 !important;
+			padding-top: 0 !important;
+		}
+
+        .bp-wrapper {
+            width: 100vw !important;
+            max-width: 100vw !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            background: #020817;
+            color: #e0eaff;
+            font-family: 'Exo 2', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body.page .entry-content.alignfull,
+        body.page .wp-block-post-content,
+        body.page .has-global-padding,
+        body.page [style*="padding-top"],
+        body.page [style*="padding-bottom"] {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        body.page .site-content,
+        body.page #content,
+        body.page .entry-content,
+        body.page main,
+        body.page #main {
+            background: #020817 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .is-layout-constrained {
+            max-width: 100% !important;
+        }
+
+        .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+            max-width: 100% !important;
+        }
+
+        .bp-wrapper::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,180,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,180,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bp-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        .bp-main {
+            flex: 1;
+			padding: 40px 48px 60px;
+            border-right: 1px solid rgba(0,180,255,0.1);
+        }
+
+        .bp-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #00cfff;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            padding: 6px 14px;
+            border: 1px solid rgba(0,207,255,0.3);
+            border-radius: 2px;
+            background: rgba(0,207,255,0.05);
+        }
+
+        .bp-category::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #00cfff;
+            border-radius: 50%;
+            animation: bp-pulse 2s infinite;
+        }
+
+        @keyframes bp-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        .bp-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(32px, 3.5vw, 58px);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #00cfff 50%, #c95cff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .bp-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 13px;
+            color: #4a7aaa;
+        }
+
+        .bp-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bp-meta-dot {
+            width: 3px;
+            height: 3px;
+            background: #1e3a5f;
+            border-radius: 50%;
+        }
+
+        .bp-image-wrap {
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 32px;
+            border: 1px solid rgba(0,180,255,0.15);
+        }
+
+        .bp-image-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 60%, rgba(2,8,23,0.8) 100%);
+        }
+
+        .bp-image-wrap img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .bp-image-label {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            z-index: 2;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: #00cfff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .bp-scanline {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00cfff, #c95cff, transparent);
+            margin: 28px 0;
+            opacity: 0.4;
+        }
+
+        .bp-text {
+            font-size: 17px;
+            line-height: 1.9;
+            color: #8aa8cc;
+            margin-bottom: 24px;
+        }
+
+        .bp-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .bp-feature {
+            background: rgba(0,180,255,0.03);
+            border: 1px solid rgba(0,180,255,0.12);
+            border-radius: 4px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .bp-feature:hover {
+            border-color: rgba(0,207,255,0.35);
+            background: rgba(0,180,255,0.07);
+        }
+
+        .bp-feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00cfff, #c95cff);
+        }
+
+        .bp-feature-icon {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .bp-feature h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #00cfff;
+            margin-bottom: 10px;
+        }
+
+        .bp-feature p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #6a8aaa;
+        }
+
+        .bp-sidebar {
+            width: 480px;
+            flex-shrink: 0;
+            background: rgba(3,18,45,0.6);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bp-sidebar-header {
+			padding: 28px 20px 20px;
+            border-bottom: 1px solid rgba(0,180,255,0.1);
+            position: relative;
+			box-sizing: border-box;
+			overflow: hidden;
+        }
+
+        .bp-sidebar-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 24px;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, #00cfff, transparent);
+        }
+
+        .bp-sidebar-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .bp-textarea {
+            width: 100%;
+			box-sizing: border-box;
+            height: 80px;
+            background: rgba(0,20,50,0.8);
+            border: 1px solid rgba(0,180,255,0.15);
+            border-radius: 4px;
+            color: #e0eaff;
+            padding: 12px 16px;
+            resize: none;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .bp-textarea:focus { border-color: rgba(0,207,255,0.5); }
+        .bp-textarea::placeholder { color: #1e3a5f; }
+
+        .bp-send-btn {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid rgba(0,207,255,0.4);
+            border-radius: 4px;
+            background: rgba(0,207,255,0.08);
+            color: #00cfff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bp-send-btn:hover {
+            background: rgba(0,207,255,0.18);
+            border-color: #00cfff;
+            box-shadow: 0 0 16px rgba(0,207,255,0.2);
+        }
+
+        .bp-comments {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 24px 24px;
+        }
+
+        .bp-comments::-webkit-scrollbar { width: 4px; }
+        .bp-comments::-webkit-scrollbar-track { background: transparent; }
+        .bp-comments::-webkit-scrollbar-thumb { background: rgba(0,180,255,0.2); border-radius: 2px; }
+
+        .bp-comment {
+            display: flex;
+            gap: 12px;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            position: relative;
+        }
+
+        .bp-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #0a2040, #0d3060);
+            border: 1px solid rgba(0,180,255,0.2);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #00cfff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bp-avatar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00cfff, transparent);
+        }
+
+        .bp-comment-body { flex: 1; min-width: 0; }
+
+        .bp-comment-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .bp-comment-user {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #00cfff;
+            text-transform: uppercase;
+        }
+
+        .bp-comment-time {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: #1e3a5f;
+        }
+
+        .bp-comment-text {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #6a8aaa;
+        }
+
+        .bp-dots {
+            position: relative;
+        }
+
+        .bp-dots-btn {
+			background: none;
+			border: none;
+			color: #00cfff;
+			cursor: pointer;
+			padding: 2px 8px;
+			font-size: 20px;
+			letter-spacing: 2px;
+			line-height: 1;
+			transition: color 0.2s;
+			border-radius: 3px;
+			opacity: 0.7;
+		}
+
+		.bp-dots-btn:hover {
+			color: #00cfff;
+			background: rgba(0,207,255,0.12);
+			opacity: 1;
+		}
+
+        .bp-dots-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: #03122d;
+            border: 1px solid rgba(0,180,255,0.2);
+            border-radius: 4px;
+            z-index: 10;
+            min-width: 130px;
+            overflow: hidden;
+        }
+
+        .bp-dots-menu.open { display: block; }
+
+        .bp-dots-menu button {
+            display: block;
+            width: 100%;
+            padding: 9px 14px;
+            background: none;
+            border: none;
+            color: #8aa8cc;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .bp-dots-menu button:hover { background: rgba(0,207,255,0.08); color: #00cfff; }
+
+        @media (max-width: 1100px) {
+            .bp-inner { flex-direction: column; }
+            .bp-sidebar { width: 100%; }
+            .bp-features { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <div class="bp-wrapper">
+        <div class="bp-inner">
+
+            <div class="bp-main">
+
+                <div class="bp-category">OPINIÓN · RPG</div>
+
+                <div class="bp-title">
+                    LA FORJA DEL DESTINO, ¿EL RPG QUE REDEFINIRÁ EL GÉNERO ESTA GENERACIÓN?
+                </div>
+
+                <div class="bp-meta">
+                    <span>⬡ El_Gamer_Sabio</span>
+                    <div class="bp-meta-dot"></div>
+                    <span>17 DE MAYO 2026</span>
+                    <div class="bp-meta-dot"></div>
+                    <span>COLABORADOR ESPECIAL</span>
+                </div>
+
+                <div class="bp-image-wrap">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/forja.png" alt="Forja del Destino">
+                    <div class="bp-image-label">// LA FORJA DEL DESTINO · ARTWORK OFICIAL</div>
+                </div>
+
+                <p class="bp-text">
+                    La Forja del Destino no es solo otro RPG con un mundo abierto enorme: es una declaración de intenciones. Sus sistemas de decisión ramificada y narrativa dinámica prometen lo que el género lleva años intentando cumplir. ¿Lo consigue de verdad?
+                </p>
+
+                <p class="bp-text">
+                    Pocas veces un título llega con tanta ambición bien ejecutada. Cada elección tiene peso real dentro del universo del juego, y los personajes secundarios reaccionan de forma creíble a tus acciones a lo largo de toda la campaña.
+                </p>
+
+                <div class="bp-scanline"></div>
+
+                <p class="bp-text">
+                    El sistema de forja de armas y habilidades añade una capa de profundidad táctica que obliga a pensar más allá del combate. No se trata solo de equiparte mejor, sino de construir una identidad jugable que refleje tus decisiones narrativas.
+                </p>
+
+                <p class="bp-text">
+                    El resultado es una de las experiencias RPG más completas y coherentes que hemos visto en esta generación. No es perfecto, pero se acerca más que ningún otro a cumplir la promesa del género.
+                </p>
+
+                <div class="bp-features">
+                    <div class="bp-feature">
+                        <div class="bp-feature-icon">⚔️</div>
+                        <h3>Decisiones que importan</h3>
+                        <p>Las elecciones no son decorativas: moldean el mundo, los aliados y el desenlace de forma visible y permanente.</p>
+                    </div>
+                    <div class="bp-feature">
+                        <div class="bp-feature-icon">🔥</div>
+                        <h3>La forja como mecánica central</h3>
+                        <p>Cada pieza creada refleja el camino elegido y potencia tu estilo de juego único más allá del crafteo habitual.</p>
+                    </div>
+                    <div class="bp-feature">
+                        <div class="bp-feature-icon">🌐</div>
+                        <h3>Mundo vivo y reactivo</h3>
+                        <p>El ecosistema del juego responde a tus acciones de forma coherente, dándole vida real al universo.</p>
+                    </div>
+                    <div class="bp-feature">
+                        <div class="bp-feature-icon">🎯</div>
+                        <h3>Combate con profundidad</h3>
+                        <p>No solo golpear más fuerte: el sistema de combate exige estrategia, posicionamiento y preparación táctica.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="bp-sidebar">
+
+                <div class="bp-sidebar-header">
+                    <div class="bp-sidebar-title">// Comentarios de la comunidad</div>
+                    <textarea class="bp-textarea" placeholder="Escribe tu comentario..."></textarea>
+                    <button class="bp-send-btn">Enviar comentario</button>
+                </div>
+
+                <div class="bp-comments">
+
+                    <div class="bp-comment">
+                        <div class="bp-avatar">SC</div>
+                        <div class="bp-comment-body">
+                            <div class="bp-comment-header">
+                                <div>
+                                    <div class="bp-comment-user">Star_Captain</div>
+                                    <div class="bp-comment-time">hace 1 min</div>
+                                </div>
+                                <div class="bp-dots">
+                                    <button class="bp-dots-btn" onclick="bpToggle(this)">···</button>
+                                    <div class="bp-dots-menu">
+                                        <button>✏️ Modificar</button>
+                                        <button>🗑️ Eliminar</button>
+                                        <button>🚩 Reportar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bp-comment-text">Me encanta cómo profundizan en la historia y las decisiones. Llevo esperando un RPG así desde hace años.</div>
+                        </div>
+                    </div>
+
+                    <div class="bp-comment">
+                        <div class="bp-avatar">PP</div>
+                        <div class="bp-comment-body">
+                            <div class="bp-comment-header">
+                                <div>
+                                    <div class="bp-comment-user">Pixel_Princess</div>
+                                    <div class="bp-comment-time">hace 5 min</div>
+                                </div>
+                                <div class="bp-dots">
+                                    <button class="bp-dots-btn" onclick="bpToggle(this)">···</button>
+                                    <div class="bp-dots-menu">
+                                        <button>✏️ Modificar</button>
+                                        <button>🗑️ Eliminar</button>
+                                        <button>🚩 Reportar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bp-comment-text">El sistema de forja me parece una idea brillante. Por fin un RPG que conecta el crafteo con la narrativa.</div>
+                        </div>
+                    </div>
+
+                    <div class="bp-comment">
+                        <div class="bp-avatar">GJ</div>
+                        <div class="bp-comment-body">
+                            <div class="bp-comment-header">
+                                <div>
+                                    <div class="bp-comment-user">Gamer_Juan</div>
+                                    <div class="bp-comment-time">hace 7 min</div>
+                                </div>
+                                <div class="bp-dots">
+                                    <button class="bp-dots-btn" onclick="bpToggle(this)">···</button>
+                                    <div class="bp-dots-menu">
+                                        <button>✏️ Modificar</button>
+                                        <button>🗑️ Eliminar</button>
+                                        <button>🚩 Reportar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bp-comment-text">Gran análisis. Las decisiones con consecuencias reales son lo que el género necesitaba desde hace tiempo.</div>
+                        </div>
+                    </div>
+
+                    <div class="bp-comment">
+                        <div class="bp-avatar">VW</div>
+                        <div class="bp-comment-body">
+                            <div class="bp-comment-header">
+                                <div>
+                                    <div class="bp-comment-user">VoidWalker</div>
+                                    <div class="bp-comment-time">hace 9 min</div>
+                                </div>
+                                <div class="bp-dots">
+                                    <button class="bp-dots-btn" onclick="bpToggle(this)">···</button>
+                                    <div class="bp-dots-menu">
+                                        <button>✏️ Modificar</button>
+                                        <button>🗑️ Eliminar</button>
+                                        <button>🚩 Reportar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bp-comment-text">Muy interesante. Ojalá el cooperativo realmente sume y no sea solo un añadido para tachar casillas.</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+    function bpToggle(btn) {
+        var menu = btn.nextElementSibling;
+        var allMenus = document.querySelectorAll('.bp-dots-menu');
+        allMenus.forEach(function(m) { if (m !== menu) m.classList.remove('open'); });
+        menu.classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.bp-dots')) {
+            document.querySelectorAll('.bp-dots-menu').forEach(function(m) { m.classList.remove('open'); });
+        }
+    });
+    </script>
+
+HTML;
+    return ob_get_clean();
+});
