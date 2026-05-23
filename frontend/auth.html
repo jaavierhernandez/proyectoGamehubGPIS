@@ -233,22 +233,76 @@ function gamehub_auth_page() {
     </div>
 
     <script>
-      function switchToGH(panel) {
-        var login = document.getElementById("card-login");
-        var register = document.getElementById("card-register");
-        if (panel === "register") {
-          login.style.display = "none";
-          register.style.display = "block";
-        } else {
-          register.style.display = "none";
-          login.style.display = "block";
-        }
-      }
-      function togglePwd(id) {
-        var input = document.getElementById(id);
-        input.type = input.type === "password" ? "text" : "password";
-      }
-    </script>
+	  function switchToGH(panel) {
+		var login = document.getElementById("card-login");
+		var register = document.getElementById("card-register");
+		if (panel === "register") {
+		  login.style.display = "none";
+		  register.style.display = "block";
+		} else {
+		  register.style.display = "none";
+		  login.style.display = "block";
+		}
+	  }
+
+	  function togglePwd(id) {
+		var input = document.getElementById(id);
+		input.type = input.type === "password" ? "text" : "password";
+	  }
+
+	  document.querySelector(".btn-login").addEventListener("click", function() {
+		var login = document.querySelector("#card-login .form-input:nth-of-type(1)").value;
+		var password = document.querySelector("#pwd-login").value;
+		fetch("/wp-content/themes/gamehub/backend_gamehub/login.php", {
+		  method: "POST",
+		  headers: { "Content-Type": "application/json" },
+		  body: JSON.stringify({ login: login, password: password })
+		})
+		.then(r => r.json())
+		.then(data => {
+		  if (data.ok) {
+			window.location.href = "/" + data.redirigir;
+		  } else {
+			alert(data.mensaje);
+		  }
+		})
+		.catch(() => alert("Error de conexión con el servidor."));
+	  });
+
+	  document.querySelector(".btn-register").addEventListener("click", function() {
+		var nombre = document.querySelectorAll("#card-register .form-input")[0].value;
+		var apellido = document.querySelectorAll("#card-register .form-input")[1].value;
+		var email = document.querySelectorAll("#card-register .form-input")[2].value;
+		var password = document.getElementById("pwd-reg1").value;
+		var password2 = document.getElementById("pwd-reg2").value;
+
+		if (password !== password2) {
+		  alert("Las contraseñas no coinciden.");
+		  return;
+		}
+
+		fetch("/wp-content/themes/gamehub/backend_gamehub/registro.php", {
+		  method: "POST",
+		  headers: { "Content-Type": "application/json" },
+		  body: JSON.stringify({
+			nombre: nombre + " " + apellido,
+			email: email,
+			password: password,
+			alias: email.split("@")[0]
+		  })
+		})
+		.then(r => r.json())
+		.then(data => {
+		  if (data.ok) {
+			alert("¡Cuenta creada correctamente! Ahora puedes iniciar sesión.");
+			switchToGH("login");
+		  } else {
+			alert(data.mensaje);
+		  }
+		})
+		.catch(() => alert("Error de conexión con el servidor."));
+	  });
+	</script>
     ';
 
     return ob_get_clean();
