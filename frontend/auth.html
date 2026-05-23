@@ -261,7 +261,13 @@ function gamehub_auth_page() {
 		.then(r => r.json())
 		.then(data => {
 		  if (data.ok) {
-			window.location.href = "/" + data.redirigir;
+			var rutas = {
+				"suscriptor": "http://gamehub.local/dashboard-suscriptor/",
+				"administrador": "http://gamehub.local/dashboard-admin/",
+				"redactor": "http://gamehub.local/wp-admin/",
+				"colaborador": "http://gamehub.local/wp-admin/"
+			};
+			window.location.href = rutas[data.usuario.rol] || "http://gamehub.local/";
 		  } else {
 			alert(data.mensaje);
 		  }
