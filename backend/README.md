@@ -1,4 +1,3 @@
-Aquí tienes el README completo actualizado:
 markdown# GAME-HUB — Backend PHP (WBS-3.1.2) — v2 WordPress
 **Asignado a: Tomás + Javier (votar.php)**
 
@@ -16,17 +15,21 @@ markdown# GAME-HUB — Backend PHP (WBS-3.1.2) — v2 WordPress
 | `logout.php` | — | Cerrar sesión con `wp_logout()` |
 | `votar.php` | CU-05 | Votar videojuego con INSERT en `wp_gh_voto` |
 | `eliminar_voto.php` | CU-05 | Eliminar voto del usuario en `wp_gh_voto` |
-| `functions.php` | — | Hook AJAX `gh_mis_votos` para el dashboard |
+
+### Plugin WordPress
+| Archivo | Descripción |
+|---|---|
+| `gamehub-functions/gamehub-functions.php` | Plugin con hooks AJAX: `gh_mis_votos` y `gh_get_role` |
 
 ---
 
 ## Dónde colocar los archivos en LocalWP
-
-Copiar la carpeta `backend_gamehub/` dentro del tema activo de WordPress:
 wp-content/
+├── plugins/
+│   └── gamehub-functions/
+│       └── gamehub-functions.php  ← activar en wp-admin → Plugins
 └── themes/
 └── gamehub/
-├── functions.php
 └── backend_gamehub/
 ├── config.php
 ├── registro.php
@@ -40,6 +43,9 @@ wp-content/
 > La ruta en `config.php` sube 4 niveles (`../../../../wp-load.php`) para
 > llegar a la raíz de WordPress. Si cambias la ubicación de la carpeta,
 > ajusta esa ruta.
+
+> El plugin `gamehub-functions` debe estar activado en wp-admin → Plugins
+> para que funcionen el dashboard y el header.
 
 ---
 
@@ -135,9 +141,22 @@ fetch('/wp-content/themes/gamehub/backend_gamehub/eliminar_voto.php', {
 
 ### AJAX — Obtener votos del usuario (dashboard)
 ```javascript
-fetch('/wp-admin/admin-ajax.php?action=gh_mis_votos', {
-  credentials: 'include'
+fetch('/wp-admin/admin-ajax.php', {
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: 'action=gh_mis_votos'
 }).then(r => r.json()).then(data => console.log(data.votos));
+```
+
+### AJAX — Obtener rol del usuario (header)
+```javascript
+fetch('/wp-admin/admin-ajax.php', {
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: 'action=gh_get_role'
+}).then(r => r.json()).then(data => console.log(data.role));
 ```
 
 ---
