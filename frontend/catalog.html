@@ -440,71 +440,32 @@ function gamehub_catalog_page() {
     </div>
 
     <script>
-    var GC_GAMES = [
-        {
-            id: 1,
-            name: "La Forja del Destino",
-            img: "http://gamehub.local/wp-content/uploads/2026/05/forja.png",
-            score: 9.50,
-            genre: "RPG",
-            platforms: ["pc","ps5","switch"],
-            row: "top"
-        },
-        {
-            id: 2,
-            name: "El Círculo del Cielo",
-            img: "http://gamehub.local/wp-content/uploads/2026/05/circulo.png",
-            score: 9.20,
-            genre: "Aventura",
-            platforms: ["pc","ps5","xbox"],
-            row: "top"
-        },
-        {
-            id: 3,
-            name: "Cyber-Samurai 2077",
-            img: "http://gamehub.local/wp-content/uploads/2026/05/cyber.png",
-            score: 9.90,
-            genre: "Acción",
-            platforms: ["pc","ps5","xbox"],
-            row: "top"
-        },
-        {
-            id: 4,
-            name: "Galactic Pioneers",
-            img: "http://gamehub.local/wp-content/uploads/2026/05/galactic.png",
-            score: 9.50,
-            genre: "Ciencia Ficción",
-            platforms: ["pc","xbox"],
-            row: "bottom"
-        },
-        {
-            id: 5,
-            name: "The Crystal Kingdom",
-            img: "http://gamehub.local/wp-content/uploads/2026/05/crystal.png",
-            score: 9.20,
-            genre: "RPG",
-            platforms: ["pc","ps5"],
-            row: "bottom"
-        },
-        {
-            id: 6,
-            name: "Mech-Warrior Zero",
-            img: "http://gamehub.local/wp-content/uploads/2026/05/mech.png",
-            score: 8.90,
-            genre: "Estrategia",
-            platforms: ["pc","xbox"],
-            row: "bottom"
-        },
-        {
-            id: 7,
-            name: "Spellbound Odyssey",
-            img: "http://gamehub.local/wp-content/uploads/2026/05/spellbound.png",
-            score: 9.50,
-            genre: "Aventura",
-            platforms: ["pc","ps5"],
-            row: "bottom"
-        }
-    ];
+    var GC_GAMES = [];
+
+	fetch('/wp-json/wp/v2/posts?categories=16&per_page=20&_embed')
+	.then(r => r.json())
+	.then(posts => {
+		posts.forEach(function(post, i) {
+			var img = post._embedded && post._embedded['wp:featuredmedia'] && post._embedded['wp:featuredmedia'][0]
+				? post._embedded['wp:featuredmedia'][0].source_url
+				: 'http://gamehub.local/wp-content/uploads/2026/05/forja.png';
+			var tags = post._embedded && post._embedded['wp:term'] && post._embedded['wp:term'][1]
+				? post._embedded['wp:term'][1].map(t => t.name)
+				: [];
+			var genre = tags[0] || 'RPG';
+			GC_GAMES.push({
+				id: post.id,
+				name: post.title.rendered,
+				img: img,
+				score: parseFloat(post.meta && post.meta._gh_nota ? post.meta._gh_nota : (8.5 + Math.random()).toFixed(2)),
+				genre: genre,
+				platforms: ['pc','ps5'],
+				row: i < 3 ? 'top' : 'bottom'
+			});
+		});
+		gcVisible = GC_GAMES.slice();
+		gcRender();
+	});
 
     var gcCurrentView = 'grid';
     var gcVisible = GC_GAMES.slice();
