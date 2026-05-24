@@ -26,6 +26,30 @@
 .gh-nav-menu a:last-child { border-bottom: none; }
 .gh-nav-menu a:hover { background: #1a1e2e; color: #18a8ff; }
 
+.gh-lang-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #0f1220;
+    border: 1px solid #1e2540;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 9999;
+    min-width: 140px;
+}
+.gh-lang-menu.open { display: block; }
+.gh-lang-menu a {
+    display: block;
+    padding: 10px 20px;
+    color: #e8eaf0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+.gh-lang-menu a:hover { background: #1a1e2e; color: #18a8ff; }
+
 .gh-header {
     width: 100%;
     background: #0a0c14;
@@ -129,7 +153,13 @@
     </div>
 
     <div class="gh-header-right">
-        <span class="gh-idioma" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">Idioma ▾ ES</span>
+        <div style="position:relative;">
+            <span class="gh-idioma" id="gh-lang-btn" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">Idioma ▾ <span id="gh-lang-current">ES</span></span>
+            <div id="gh-lang-menu" class="gh-lang-menu">
+                <a href="#" onclick="ghSetLang('es')">🇪🇸 Español</a>
+                <a href="#" onclick="ghSetLang('en')">🇬🇧 English</a>
+            </div>
+        </div>
         <div style="cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#e8eaf0" stroke-width="2">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -158,6 +188,7 @@ var GH_URLS = {
     admin:      'http://gamehub.local/dashboard-admin/'
 };
 
+// Rol y redirección dashboard
 fetch('/wp-admin/admin-ajax.php', {
     method: 'POST',
     credentials: 'include',
@@ -178,10 +209,32 @@ fetch('/wp-admin/admin-ajax.php', {
         document.getElementById('gh-avatar-btn').href    = GH_URLS.login;
     });
 
+// Selector de idioma
+var ghLangBtn  = document.getElementById('gh-lang-btn');
+var ghLangMenu = document.getElementById('gh-lang-menu');
+
+ghLangBtn.addEventListener('click', function() {
+    ghLangMenu.classList.toggle('open');
+});
+
+function ghSetLang(lang) {
+    var path = window.location.pathname.replace(/^\/(en|es)\//, '/');
+    if (lang === 'en') {
+        window.location.href = '/en' + path;
+    } else {
+        window.location.href = path;
+    }
+    document.getElementById('gh-lang-current').textContent = lang.toUpperCase();
+    ghLangMenu.classList.remove('open');
+}
+
 document.addEventListener('click', function(e) {
     var nav = document.getElementById('ghNav');
     if (nav && !e.target.closest('#ghNav') && !e.target.closest('[onclick]')) {
         nav.classList.remove('open');
+    }
+    if (!e.target.closest('#gh-lang-btn') && !e.target.closest('#gh-lang-menu')) {
+        ghLangMenu.classList.remove('open');
     }
 });
 </script>
