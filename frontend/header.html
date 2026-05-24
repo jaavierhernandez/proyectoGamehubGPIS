@@ -12,11 +12,7 @@
     display: none;
     z-index: 9999;
 }
-
-.gh-nav-menu.open {
-    display: block;
-}
-
+.gh-nav-menu.open { display: block; }
 .gh-nav-menu a {
     display: block;
     padding: 16px 24px;
@@ -27,21 +23,84 @@
     border-bottom: 1px solid #1e2540;
     transition: background 0.2s, color 0.2s;
 }
+.gh-nav-menu a:last-child { border-bottom: none; }
+.gh-nav-menu a:hover { background: #1a1e2e; color: #18a8ff; }
 
-.gh-nav-menu a:last-child {
-    border-bottom: none;
+.gh-header {
+    width: 100%;
+    background: #0a0c14;
+    border-bottom: 1px solid #1e2540;
+    padding: 0 60px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 48px;
+    box-sizing: border-box;
+    position: relative;
+}
+.gh-header-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-shrink: 0;
+}
+.gh-header-search {
+    flex: 1;
+    max-width: 700px;
+    position: relative;
+}
+.gh-header-search input {
+    width: 100%;
+    background: #1a1e2e;
+    border: 1px solid #1e2540;
+    border-radius: 28px;
+    padding: 14px 24px 14px 52px;
+    color: #e8eaf0;
+    font-size: 18px;
+    outline: none;
+    box-sizing: border-box;
+}
+.gh-header-right {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    flex-shrink: 0;
+}
+.gh-idioma {
+    color: #e8eaf0;
+    font-size: 28px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.2s;
+    display: inline-block;
 }
 
-.gh-nav-menu a:hover {
-    background: #1a1e2e;
-    color: #18a8ff;
+@media (max-width: 768px) {
+    .gh-header {
+        padding: 12px 16px;
+        height: auto;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .gh-header-search {
+        order: 3;
+        max-width: 100%;
+        width: 100%;
+        flex: unset;
+    }
+    .gh-header-search input {
+        font-size: 14px;
+        padding: 10px 16px 10px 40px;
+    }
+    .gh-idioma { display: none; }
+    .gh-header-right { gap: 20px; }
+    .gh-nav-menu { top: auto; }
 }
 </style>
 
-<header style="width:100%;background:#0a0c14;border-bottom:1px solid #1e2540;padding:0 60px;height:120px;display:flex;align-items:center;justify-content:space-between;gap:48px;box-sizing:border-box;position:relative;">
-
-    <div style="display:flex;align-items:center;gap:24px;flex-shrink:0;">
-
+<header class="gh-header">
+    <div class="gh-header-left">
         <div style="position:relative;">
             <div onclick="document.getElementById('ghNav').classList.toggle('open')" style="cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:8px;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                 <span style="display:block;width:30px;height:3px;background:#e8eaf0;border-radius:2px;"></span>
@@ -56,22 +115,20 @@
                 <a href="http://gamehub.local/blog-de-opinion-con-sistema-de-comentarios/">✍️ Blog</a>
             </div>
         </div>
-
-        <a href="http://gamehub.local/pagina-de-inicio/" style="flex-shrink:0;text-decoration:none;margin-top:20px;transition:transform 0.2s;display:inline-block;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
-            <img src="http://gamehub.local/wp-content/uploads/2026/05/logo.png" alt="GameHub" style="height:140px;width:auto;">
+        <a href="http://gamehub.local/pagina-de-inicio/" style="flex-shrink:0;text-decoration:none;margin-top:10px;transition:transform 0.2s;display:inline-block;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="http://gamehub.local/wp-content/uploads/2026/05/logo.png" alt="GameHub" style="height:100px;width:auto;">
         </a>
-
     </div>
 
-    <div style="flex:1;max-width:700px;position:relative;">
-        <input type="text" placeholder="Buscar juegos, servicios, o usuarios..." style="width:100%;background:#1a1e2e;border:1px solid #1e2540;border-radius:28px;padding:14px 24px 14px 52px;color:#e8eaf0;font-size:18px;outline:none;box-sizing:border-box;">
+    <div class="gh-header-search">
+        <input type="text" placeholder="Buscar juegos, servicios, o usuarios...">
         <svg style="position:absolute;left:18px;top:50%;transform:translateY(-50%);width:22px;height:22px;" viewBox="0 0 24 24">
             <path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="#7a8099" stroke-width="2" fill="none"/>
         </svg>
     </div>
 
-    <div style="display:flex;align-items:center;gap:60px;flex-shrink:0;">
-        <span style="color:#e8eaf0;font-size:28px;cursor:pointer;white-space:nowrap;transition:transform 0.2s;display:inline-block;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">Idioma ▾ ES</span>
+    <div class="gh-header-right">
+        <span class="gh-idioma" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">Idioma ▾ ES</span>
         <div style="cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#e8eaf0" stroke-width="2">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -91,7 +148,6 @@
             </svg>
         </a>
     </div>
-
 </header>
 
 <script>
