@@ -113,6 +113,7 @@
                 <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/">🎮 Catálogo</a>
                 <a href="http://gamehub.local/pagina-de-noticias/">📰 Noticias</a>
                 <a href="http://gamehub.local/blog-de-opinion-con-sistema-de-comentarios/">✍️ Blog</a>
+                <a href="#" id="gh-nav-dashboard">👤 Dashboard</a>
             </div>
         </div>
         <a href="http://gamehub.local/pagina-de-inicio/" style="flex-shrink:0;text-decoration:none;margin-top:10px;transition:transform 0.2s;display:inline-block;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
@@ -141,7 +142,7 @@
                 <polyline points="22,6 12,13 2,6"/>
             </svg>
         </div>
-        <a href="http://gamehub.local/dashboard-suscriptor/" style="text-decoration:none;display:flex;align-items:center;justify-content:center;width:68px;height:68px;border-radius:50%;background:#1e2540;border:2px solid #2a3050;cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+        <a href="#" id="gh-avatar-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;width:68px;height:68px;border-radius:50%;background:#1e2540;border:2px solid #2a3050;cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#7a8099" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
@@ -151,6 +152,32 @@
 </header>
 
 <script>
+var GH_URLS = {
+    login:      'http://gamehub.local/pagina-de-registro-e-inicio-de-sesion/',
+    subscriber: 'http://gamehub.local/dashboard-suscriptor/',
+    admin:      'http://gamehub.local/dashboard-admin/'
+};
+
+fetch('/wp-admin/admin-ajax.php', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'action=gh_get_role'
+})
+    .then(r => r.json())
+    .then(data => {
+        var url;
+        if (data.role === 'admin')           url = GH_URLS.admin;
+        else if (data.role === 'subscriber') url = GH_URLS.subscriber;
+        else                                 url = GH_URLS.login;
+        document.getElementById('gh-nav-dashboard').href = url;
+        document.getElementById('gh-avatar-btn').href    = url;
+    })
+    .catch(() => {
+        document.getElementById('gh-nav-dashboard').href = GH_URLS.login;
+        document.getElementById('gh-avatar-btn').href    = GH_URLS.login;
+    });
+
 document.addEventListener('click', function(e) {
     var nav = document.getElementById('ghNav');
     if (nav && !e.target.closest('#ghNav') && !e.target.closest('[onclick]')) {
