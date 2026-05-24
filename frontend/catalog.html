@@ -353,6 +353,33 @@ function gamehub_catalog_page() {
             font-size: 16px;
         }
         .gc-no-results.show { display: block; }
+		
+		.gc-vote-bar {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			margin-top: 6px;
+		}
+		.gc-vote-btn {
+			background: rgba(0,212,255,0.08);
+			border: 1px solid rgba(0,212,255,0.2);
+			border-radius: 6px;
+			color: #00d4ff;
+			font-size: 11px;
+			font-weight: 700;
+			padding: 4px 10px;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+		.gc-vote-btn:hover {
+			background: rgba(0,212,255,0.2);
+			border-color: #00d4ff;
+		}
+		.gc-vote-btn.voted {
+			background: rgba(245,166,35,0.15);
+			border-color: #f5a623;
+			color: #f5a623;
+		}
 
         @media (max-width: 768px) {
             .gc-layout { flex-direction: column; }
@@ -492,27 +519,29 @@ function gamehub_catalog_page() {
     }
 
     function gcCardHTML(game, listMode) {
-        var score = game.score.toFixed(2);
-        if (listMode) {
-            return '<div class="gc-card" data-id="' + game.id + '" data-platforms="' + game.platforms.join(',') + '" data-genre="' + game.genre + '" data-score="' + game.score + '" data-name="' + game.name + '">' +
-        	'<div class="gc-card-thumb"><img src="' + game.img + '" alt="' + game.name + '" loading="lazy"></div>' +
-        	'<div class="gc-card-info">' +
-        	'<div class="gc-card-name">' + game.name + '</div>' +
-        	gcGenreIcon(game.genre) +
-        	'<div class="gc-platforms">' + gcPlatTags(game.platforms) + '</div>' +
-        	'<div class="gc-score-badge"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="gc-score-num">' + score + '</span></div>' +
-        '</div></div>';
-        }
-        return '<div class="gc-card" data-id="' + game.id + '" data-platforms="' + game.platforms.join(',') + '" data-genre="' + game.genre + '" data-score="' + game.score + '" data-name="' + game.name + '">' +
-            '<div class="gc-card-thumb"><img src="' + game.img + '" alt="' + game.name + '" loading="lazy">' +
-            '<div class="gc-score-badge"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="gc-score-num">' + score + '</span></div>' +
-            '</div>' +
-            '<div class="gc-card-info">' +
-            '<div class="gc-card-name">' + game.name + '</div>' +
-            '<div class="gc-platforms">' + gcPlatTags(game.platforms) + '</div>' +
-            gcGenreIcon(game.genre) +
-            '</div></div>';
-    }
+		var score = game.score.toFixed(2);
+		if (listMode) {
+			return '<div class="gc-card" data-id="' + game.id + '" data-platforms="' + game.platforms.join(',') + '" data-genre="' + game.genre + '" data-score="' + game.score + '" data-name="' + game.name + '">' +
+				'<div class="gc-card-thumb"><img src="' + game.img + '" alt="' + game.name + '" loading="lazy"></div>' +
+				'<div class="gc-card-info">' +
+				'<div class="gc-card-name">' + game.name + '</div>' +
+				gcGenreIcon(game.genre) +
+				'<div class="gc-platforms">' + gcPlatTags(game.platforms) + '</div>' +
+				'<div class="gc-vote-bar"><button class="gc-vote-btn" id="vbtn-' + game.id + '" onclick="gcVotar(' + game.id + ', this)">★ Votar</button></div>' +
+				'<div class="gc-score-badge"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="gc-score-num">' + score + '</span></div>' +
+				'</div></div>';
+		}
+		return '<div class="gc-card" data-id="' + game.id + '" data-platforms="' + game.platforms.join(',') + '" data-genre="' + game.genre + '" data-score="' + game.score + '" data-name="' + game.name + '">' +
+			'<div class="gc-card-thumb"><img src="' + game.img + '" alt="' + game.name + '" loading="lazy">' +
+			'<div class="gc-score-badge"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span class="gc-score-num">' + score + '</span></div>' +
+			'</div>' +
+			'<div class="gc-card-info">' +
+			'<div class="gc-card-name">' + game.name + '</div>' +
+			'<div class="gc-platforms">' + gcPlatTags(game.platforms) + '</div>' +
+			'<div class="gc-vote-bar"><button class="gc-vote-btn" id="vbtn-' + game.id + '" onclick="gcVotar(' + game.id + ', this)">★ Votar</button></div>' +
+			gcGenreIcon(game.genre) +
+			'</div></div>';
+	}
 
     function gcRender() {
         var top = document.getElementById('gc-row-top');
@@ -591,6 +620,33 @@ function gamehub_catalog_page() {
         document.getElementById('gc-list-view').style.display = view === 'list' ? 'flex' : 'none';
         gcRender();
     }
+	
+	function gcVotar(id_juego, btn) {
+		if (btn.classList.contains('voted')) {
+			alert('Ya has votado este juego.');
+			return;
+		}
+		var puntuacion = prompt('Puntúa este juego del 1 al 10:');
+		if (!puntuacion || isNaN(puntuacion) || puntuacion < 1 || puntuacion > 10) {
+			alert('Puntuación no válida.');
+			return;
+		}
+		fetch('/wp-content/themes/gamehub/backend_gamehub/votar.php', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ id_videojuego: id_juego, puntuacion: parseInt(puntuacion) })
+		})
+		.then(r => r.json())
+		.then(data => {
+			if (data.ok) {
+				btn.textContent = '★ Votado ' + puntuacion;
+				btn.classList.add('voted');
+			} else {
+				alert(data.mensaje);
+			}
+		})
+		.catch(() => alert('Error de conexión.'));
+	}
 
     document.addEventListener('DOMContentLoaded', function() { gcRender(); });
     if (document.readyState !== 'loading') gcRender();
