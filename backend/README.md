@@ -1,5 +1,5 @@
 # GAME-HUB — Backend PHP (WBS-3.1.2) — v2 WordPress
-**Asignado a: Tomás**
+**Asignado a: Tomás + Javier (votar.php)**
 
 ---
 
@@ -13,25 +13,24 @@
 | `publicar_noticia.php` | CU-03 | Publicar noticia con `wp_insert_post()` |
 | `comentar.php` | CU-04 | Comentar con `wp_new_comment()` |
 | `logout.php` | — | Cerrar sesión con `wp_logout()` |
+| `votar.php` | CU-05 | Votar videojuego con INSERT en `wp_gh_voto` |
 
 ---
 
 ## Dónde colocar los archivos en LocalWP
 
 Copiar la carpeta `backend_gamehub/` dentro del tema activo de WordPress:
-
-```
 wp-content/
 └── themes/
-    └── gamehub/          ← tema del proyecto
-        └── backend_gamehub/
-            ├── config.php
-            ├── registro.php
-            ├── login.php
-            ├── publicar_noticia.php
-            ├── comentar.php
-            └── logout.php
-```
+└── gamehub/
+└── backend_gamehub/
+├── config.php
+├── registro.php
+├── login.php
+├── publicar_noticia.php
+├── comentar.php
+├── logout.php
+└── votar.php
 
 > La ruta en `config.php` sube 4 niveles (`../../../../wp-load.php`) para
 > llegar a la raíz de WordPress. Si cambias la ubicación de la carpeta,
@@ -88,9 +87,9 @@ fetch('/wp-content/themes/gamehub/backend_gamehub/publicar_noticia.php', {
   body: JSON.stringify({
     titulo:    'Nuevo juego anunciado',
     contenido: 'Texto de la noticia...',
-    estado:    'publicada',           // 'borrador' | 'publicada' | 'archivada'
-    etiquetas: ['RPG', 'Acción'],    // nombres de etiqueta (WP las crea si no existen)
-    imagen_url: 'https://...'        // opcional
+    estado:    'publicada',
+    etiquetas: ['RPG', 'Acción'],
+    imagen_url: 'https://...'
   })
 }).then(r => r.json()).then(data => console.log(data));
 ```
@@ -101,8 +100,20 @@ fetch('/wp-content/themes/gamehub/backend_gamehub/comentar.php', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    id_noticia: 5,    // ID del post en WordPress
+    id_noticia: 5,
     texto: 'Me parece muy interesante esta noticia.'
+  })
+}).then(r => r.json()).then(data => console.log(data));
+```
+
+### CU-05 — Votar videojuego (solo suscriptores logueados)
+```javascript
+fetch('/wp-content/themes/gamehub/backend_gamehub/votar.php', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    id_videojuego: 112,
+    puntuacion: 8
   })
 }).then(r => r.json()).then(data => console.log(data));
 ```
@@ -118,3 +129,4 @@ fetch('/wp-content/themes/gamehub/backend_gamehub/comentar.php', {
 - ✅ Bloqueo por intentos: máx. 5 intentos, usando Transients de WP
 - ✅ XSS: `sanitize_text_field()`, `wp_kses_post()`, `esc_url_raw()`
 - ✅ Cookies: `wp_set_auth_cookie()` con HttpOnly gestionado por WP
+- ✅ Unicidad de voto: UNIQUE KEY en `wp_gh_voto` impide votos duplicados
