@@ -1,4 +1,5 @@
-# GAME-HUB — Backend PHP (WBS-3.1.2) — v2 WordPress
+Aquí tienes el README completo actualizado:
+markdown# GAME-HUB — Backend PHP (WBS-3.1.2) — v2 WordPress
 **Asignado a: Tomás + Javier (votar.php)**
 
 ---
@@ -14,6 +15,8 @@
 | `comentar.php` | CU-04 | Comentar con `wp_new_comment()` |
 | `logout.php` | — | Cerrar sesión con `wp_logout()` |
 | `votar.php` | CU-05 | Votar videojuego con INSERT en `wp_gh_voto` |
+| `eliminar_voto.php` | CU-05 | Eliminar voto del usuario en `wp_gh_voto` |
+| `functions.php` | — | Hook AJAX `gh_mis_votos` para el dashboard |
 
 ---
 
@@ -23,6 +26,7 @@ Copiar la carpeta `backend_gamehub/` dentro del tema activo de WordPress:
 wp-content/
 └── themes/
 └── gamehub/
+├── functions.php
 └── backend_gamehub/
 ├── config.php
 ├── registro.php
@@ -30,7 +34,8 @@ wp-content/
 ├── publicar_noticia.php
 ├── comentar.php
 ├── logout.php
-└── votar.php
+├── votar.php
+└── eliminar_voto.php
 
 > La ruta en `config.php` sube 4 niveles (`../../../../wp-load.php`) para
 > llegar a la raíz de WordPress. Si cambias la ubicación de la carpeta,
@@ -116,6 +121,23 @@ fetch('/wp-content/themes/gamehub/backend_gamehub/votar.php', {
     puntuacion: 8
   })
 }).then(r => r.json()).then(data => console.log(data));
+```
+
+### CU-05 — Eliminar voto
+```javascript
+fetch('/wp-content/themes/gamehub/backend_gamehub/eliminar_voto.php', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ id_videojuego: 112 }),
+  credentials: 'include'
+}).then(r => r.json()).then(data => console.log(data));
+```
+
+### AJAX — Obtener votos del usuario (dashboard)
+```javascript
+fetch('/wp-admin/admin-ajax.php?action=gh_mis_votos', {
+  credentials: 'include'
+}).then(r => r.json()).then(data => console.log(data.votos));
 ```
 
 ---
