@@ -498,72 +498,9 @@ function gamehub_dashboard() {
                 <span class="ghd-count-badge">3 juegos</span>
             </div>
 
-            <div class="ghd-votes-list">
-
-                <div class="ghd-vote-card">
-                    <div class="ghd-vote-rank">#1</div>
-                    <img class="ghd-vote-img" src="http://gamehub.local/wp-content/uploads/2026/05/galactic.png" alt="Galactic Pioneers">
-                    <div class="ghd-vote-info">
-                        <div class="ghd-vote-name">Galactic Pioneers</div>
-                        <div class="ghd-vote-rating">
-                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                            9.2
-                        </div>
-                        <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ghd-vote-link">
-                            Ver juego
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
-                    <div class="ghd-vote-actions">
-                        <div class="ghd-icon-btn" title="Eliminar voto">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="ghd-vote-card">
-                    <div class="ghd-vote-rank">#2</div>
-                    <img class="ghd-vote-img" src="http://gamehub.local/wp-content/uploads/2026/05/forja.png" alt="La Forja del Destino">
-                    <div class="ghd-vote-info">
-                        <div class="ghd-vote-name">La Forja del Destino</div>
-                        <div class="ghd-vote-rating">
-                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                            8.8
-                        </div>
-                        <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ghd-vote-link">
-                            Ver juego
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
-                    <div class="ghd-vote-actions">
-                        <div class="ghd-icon-btn" title="Eliminar voto">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="ghd-vote-card">
-                    <div class="ghd-vote-rank">#3</div>
-                    <img class="ghd-vote-img" src="http://gamehub.local/wp-content/uploads/2026/05/circulo.png" alt="El Círculo del Cielo">
-                    <div class="ghd-vote-info">
-                        <div class="ghd-vote-name">El Círculo del Cielo</div>
-                        <div class="ghd-vote-rating">
-                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                            9.5
-                        </div>
-                        <a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ghd-vote-link">
-                            Ver juego
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        </a>
-                    </div>
-                    <div class="ghd-vote-actions">
-                        <div class="ghd-icon-btn" title="Eliminar voto">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <div class="ghd-votes-list" id="ghd-votes-list">
+				<div style="color:#3a4060;font-size:14px;padding:20px;">Cargando votos...</div>
+			</div>
 
             <div class="ghd-section-divider"></div>
 
@@ -619,6 +556,61 @@ function gamehub_dashboard() {
         </aside>
 
     </div>
+	
+	<script>
+	fetch('/wp-admin/admin-ajax.php?action=gh_mis_votos', { credentials: 'include' })
+		.then(r => r.json())
+		.then(data => {
+			var list = document.getElementById('ghd-votes-list');
+			if (!data.votos || data.votos.length === 0) {
+				list.innerHTML = '<div style="color:#3a4060;font-size:14px;padding:20px;">No has votado ningún juego todavía.</div>';
+				document.querySelector('.ghd-count-badge').textContent = '0 juegos';
+				return;
+			}
+			document.querySelector('.ghd-count-badge').textContent = data.votos.length + ' juegos';
+			list.innerHTML = data.votos.map(function(v, i) {
+				return '<div class="ghd-vote-card">' +
+					'<div class="ghd-vote-rank">#' + (i+1) + '</div>' +
+					'<img class="ghd-vote-img" src="' + (v.img || '') + '" alt="' + v.nombre + '">' +
+					'<div class="ghd-vote-info">' +
+					'<div class="ghd-vote-name">' + v.nombre + '</div>' +
+					'<div class="ghd-vote-rating"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:#f5a623;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>' + v.puntuacion + '</div>' +
+					'<a href="http://gamehub.local/pagina-de-catalogo-de-videojuegos/" class="ghd-vote-link">Ver juego <svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:11px;height:11px;stroke:currentColor;"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>' +
+					'</div>' +
+					'<div class="ghd-vote-actions"><div class="ghd-icon-btn" title="Eliminar voto" onclick="ghEliminarVoto(' + v.id_videojuego + ', this)"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" style="width:14px;height:14px;stroke:#7a8099;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></div></div>' +
+					'</div>';
+			}).join('');
+		})
+		.catch(() => {});
+
+	function ghEliminarVoto(id_videojuego, btn) {
+		if (!confirm('¿Eliminar este voto?')) return;
+		fetch('/wp-content/themes/gamehub/backend_gamehub/eliminar_voto.php', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ id_videojuego: id_videojuego }),
+			credentials: 'include'
+		})
+		.then(r => {
+			if (!r.ok) throw new Error('HTTP ' + r.status);
+			return r.json();
+		})
+		.then(data => {
+			if (data.ok) {
+				btn.closest('.ghd-vote-card').remove();
+				var badge = document.querySelector('.ghd-count-badge');
+				if (badge) {
+					var n = parseInt(badge.textContent) - 1;
+					badge.textContent = n + ' juegos';
+				}
+			} else {
+				alert('Error: ' + data.mensaje);
+			}
+		})
+		.catch(err => alert('Error de conexión: ' + err.message));
+	}
+	</script>
+	
 HTML;
     return ob_get_clean();
 }
