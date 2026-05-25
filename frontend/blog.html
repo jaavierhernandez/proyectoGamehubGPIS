@@ -1,0 +1,305 @@
+add_shortcode('gamehub_blog', function() {
+    ob_start();
+    echo <<<HTML
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body.page .site-content,
+		body.page #content,
+		body.page .entry-content,
+		body.page main,
+		body.page #main {
+			background: #020817 !important;
+			padding: 0 !important;
+			margin: 0 !important;
+		}
+
+        .community-container {
+			width: 100vw !important;
+			max-width: 100vw !important;
+			margin-left: calc(-50vw + 50%) !important;
+			margin-right: calc(-50vw + 50%) !important;
+			padding: 0px 120px;
+		}
+
+        .community-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 0px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #0d3d72;
+        }
+
+        .community-title {
+            font-size: 52px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #00cfff, #b14cff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .title-icon {
+            font-size: 22px;
+        }
+
+        .blog-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .blog-card {
+            display: flex;
+            gap: 0;
+            background: #03122d;
+            border: 1px solid #0d3d72;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .blog-card:hover {
+            border-color: #1bbcff;
+            box-shadow: 0 0 22px rgba(0, 183, 255, 0.3), inset 0 0 40px rgba(0, 183, 255, 0.03);
+            transform: translateY(-2px);
+        }
+
+        .blog-card-img {
+            width: 280px;
+            min-height: 160px;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .blog-card:hover .blog-card-img img {
+            transform: scale(1.05);
+        }
+
+        .blog-card-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 60%, #03122d);
+        }
+
+        .blog-content {
+            flex: 1;
+            padding: 18px 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .blog-tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 20px;
+            width: fit-content;
+        }
+
+        .tag-opinion   { background: rgba(0,207,255,0.12); color: #00cfff; border: 1px solid rgba(0,207,255,0.3); }
+        .tag-analisis  { background: rgba(177,76,255,0.12); color: #cf59ff; border: 1px solid rgba(177,76,255,0.3); }
+        .tag-retro     { background: rgba(255,165,0,0.12); color: #ffaa33; border: 1px solid rgba(255,165,0,0.3); }
+        .tag-horror    { background: rgba(255,50,50,0.12); color: #ff5555; border: 1px solid rgba(255,50,50,0.3); }
+        .tag-coop      { background: rgba(0,255,150,0.12); color: #00ff96; border: 1px solid rgba(0,255,150,0.3); }
+        .tag-indie     { background: rgba(255,200,0,0.12); color: #ffcc00; border: 1px solid rgba(255,200,0,0.3); }
+
+        .blog-content h2 {
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.3;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #00cfff, #cf59ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .blog-meta {
+            color: #7a8fbf;
+            font-size: 11px;
+            letter-spacing: 0.3px;
+        }
+
+        .blog-meta strong {
+            color: #a0b4e0;
+        }
+
+        .blog-text {
+            color: #c7d3e8;
+            font-size: 13px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .blog-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+
+        .blog-comments {
+            color: #7a4fff;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .blog-read-more {
+            font-size: 11px;
+            color: #00cfff;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .blog-card:hover .blog-read-more {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .community-container { padding: 24px 16px; }
+            .blog-card { flex-direction: column; }
+            .blog-card-img { width: 100%; height: 180px; }
+            .blog-card-img::after { background: linear-gradient(0deg, #03122d 0%, transparent 60%); }
+            .community-title { font-size: 20px; }
+        }
+    </style>
+
+    <div class="community-container">
+
+        <div class="community-header">
+            <h1 class="community-title">Blog: Opiniones de la Comunidad</h1>
+        </div>
+
+        <div class="blog-grid">
+
+            <a href="http://gamehub.local/detalle-de-entrada-de-blog/" class="blog-card">
+                <div class="blog-card-img">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/forja.png" alt="Forja del Destino">
+                </div>
+                <div class="blog-content">
+                    <span class="blog-tag tag-opinion">Opinión</span>
+                    <h2>Forja del Destino: ¿El RPG que redefinirá el género esta generación?</h2>
+                    <div class="blog-meta">Por: <strong>El_Gamer_Sabio</strong> • Colaborador Especial • 17 de Mayo 2026</div>
+                    <p class="blog-text">Forja del Destino no es solo otro RPG con un mundo abierto enorme: es una declaración de intenciones. Sus sistemas de decisión ramificada y narrativa dinámica prometen lo que el género lleva años intentando cumplir. ¿Lo consigue de verdad?</p>
+                    <div class="blog-footer">
+                        <span class="blog-comments">💬 24 comentarios</span>
+                        <span class="blog-read-more">Leer más →</span>
+                    </div>
+                </div>
+            </a>
+
+            <div class="blog-card">
+                <div class="blog-card-img">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/circulo.png" alt="Círculo del Cielo">
+                </div>
+                <div class="blog-content">
+                    <span class="blog-tag tag-analisis">Análisis</span>
+                    <h2>Círculo del Cielo: el combate más fluido que hemos probado en años</h2>
+                    <div class="blog-meta">Por: <strong>JuanPixel</strong> • 15 de Mayo 2026</div>
+                    <p class="blog-text">Mecánicas más fluidas, impacto real en cada golpe y una IA que te obliga a pensar cada movimiento. Analizamos a fondo el sistema de combate de Círculo del Cielo. ¿Estamos ante un nuevo estándar del género?</p>
+                    <div class="blog-footer">
+                        <span class="blog-comments">💬 18 comentarios</span>
+                        <span class="blog-read-more">Leer más →</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="blog-card">
+                <div class="blog-card-img">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/galactic.png" alt="Galactic Pioneers">
+                </div>
+                <div class="blog-content">
+                    <span class="blog-tag tag-retro">Retro & Futuro</span>
+                    <h2>Galactic Pioneers: cuando el pasado imaginó nuestro futuro espacial</h2>
+                    <div class="blog-meta">Por: <strong>Nexo_Arcade</strong> • 12 de Mayo 2026</div>
+                    <p class="blog-text">Un viaje por los juegos que predijeron la exploración espacial con sorprendente acierto. Desde los clásicos de los 90 hasta Galactic Pioneers, repasamos cómo el imaginario retro sigue inspirando los mundos de hoy.</p>
+                    <div class="blog-footer">
+                        <span class="blog-comments">💬 12 comentarios</span>
+                        <span class="blog-read-more">Leer más →</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="blog-card">
+                <div class="blog-card-img">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/cyber.png" alt="Cyber-Samurai 2077">
+                </div>
+                <div class="blog-content">
+                    <span class="blog-tag tag-horror">Terror</span>
+                    <h2>Cyber-Samurai 2077 y el regreso del horror clásico a los videojuegos modernos</h2>
+                    <div class="blog-meta">Por: <strong>LunaNoctis</strong> • 10 de Mayo 2026</div>
+                    <p class="blog-text">Menos sustos fáciles, más tensión psicológica. Analizamos por qué el horror vuelve a sus raíces y cómo Cyber-Samurai 2077 está recuperando lo que realmente da miedo: la incertidumbre y la atmósfera.</p>
+                    <div class="blog-footer">
+                        <span class="blog-comments">💬 16 comentarios</span>
+                        <span class="blog-read-more">Leer más →</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="blog-card">
+                <div class="blog-card-img">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/crystal.png" alt="Crystal Kingdom">
+                </div>
+                <div class="blog-content">
+                    <span class="blog-tag tag-coop">Cooperativo</span>
+                    <h2>Crystal Kingdom: jugar juntos nunca había sido tan épico ni tan adictivo</h2>
+                    <div class="blog-meta">Por: <strong>Star_Captain</strong> • 8 de Mayo 2026</div>
+                    <p class="blog-text">Exploramos los mejores momentos cooperativos de Crystal Kingdom y por qué la experiencia compartida puede ser más adictiva que cualquier campaña en solitario. La comunidad ya tiene su nuevo juego favorito.</p>
+                    <div class="blog-footer">
+                        <span class="blog-comments">💬 22 comentarios</span>
+                        <span class="blog-read-more">Leer más →</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="blog-card">
+				<div class="blog-card-img">
+					<img src="http://gamehub.local/wp-content/uploads/2026/05/spellbound.png" alt="Spellbound">
+                </div>
+                <div class="blog-content">
+                    <span class="blog-tag tag-indie">Indie</span>
+                    <h2>Spellbound: pequeño estudio, historia enorme y una magia que no esperábamos</h2>
+                    <div class="blog-meta">Por: <strong>Pixel_Princess</strong> • 5 de Mayo 2026</div>
+                    <p class="blog-text">Los juegos indie siguen demostrando que la creatividad no entiende de presupuestos. Spellbound es la prueba: una joya escondida que merece mucho más reconocimiento del que está recibiendo.</p>
+                    <div class="blog-footer">
+                        <span class="blog-comments">💬 14 comentarios</span>
+                        <span class="blog-read-more">Leer más →</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+HTML;
+    return ob_get_clean();
+});

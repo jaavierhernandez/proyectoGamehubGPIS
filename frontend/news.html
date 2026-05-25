@@ -1,0 +1,451 @@
+function gamehub_news_page() {
+    ob_start();
+    echo <<<HTML
+    <style>
+
+        .wp-block-group, .wp-block-template-part {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        body.page .entry-content.alignfull,
+        body.page .wp-block-post-content,
+        body.page .has-global-padding,
+        body.page [style*="padding-top"],
+        body.page [style*="padding-bottom"] {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        body.page .site-content,
+        body.page #content,
+        body.page .entry-content,
+        body.page main,
+        body.page #main {
+            background: #0a0c14 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .gn-wrapper {
+            font-family: sans-serif;
+            background: #0a0c14;
+            color: #e8eaf0;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            margin-left: calc(-50vw + 50%) !important;
+            margin-right: calc(-50vw + 50%) !important;
+            overflow: hidden;
+            padding: 0px 32px 60px;
+            box-sizing: border-box;
+        }
+
+        .gn-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+        .gn-title {
+            font-size: clamp(28px, 3.5vw, 52px);
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 0 40px rgba(0,212,255,0.35), 0 2px 0 rgba(0,0,0,0.8);
+        }
+        .gn-title span { color: #00d4ff; }
+        .gn-subtitle {
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #3a4060;
+            margin-top: 6px;
+        }
+
+        .gn-card {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #0f1220;
+            border: 1px solid #1e2540;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .gn-card:hover {
+            transform: translateY(-5px);
+            border-color: #1a6fff;
+            box-shadow: 0 12px 36px rgba(26,111,255,0.28);
+        }
+        .gn-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        .gn-card:hover img {
+            transform: scale(1.06);
+        }
+        .gn-card-thumb {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gn-card-thumb::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10,12,20,0.92) 0%, rgba(10,12,20,0.3) 50%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .gn-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 11px;
+            color: #4a5280;
+            letter-spacing: 0.5px;
+        }
+        .gn-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .gn-meta-item svg {
+            width: 12px;
+            height: 12px;
+            fill: #4a5280;
+            flex-shrink: 0;
+        }
+        .gn-category-tag {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.25);
+            color: #00d4ff;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .gn-hero-wrap {
+            margin-bottom: 16px;
+        }
+        .gn-hero {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        .gn-hero .gn-card-thumb {
+            height: 420px;
+            border-radius: 10px;
+        }
+        .gn-hero-body {
+            position: absolute;
+            top: 52px;
+            left: 0;
+            right: 0;
+            padding: 28px 32px;
+            z-index: 2;
+        }
+        .gn-hero-body .gn-card-title {
+            font-size: clamp(20px, 2.5vw, 34px);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+        }
+        .gn-hero-body .gn-card-excerpt {
+            font-size: 14px;
+            color: #c0c8e0;
+            line-height: 1.6;
+            max-width: 680px;
+            margin-bottom: 14px;
+        }
+        .gn-hero-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #00d4ff;
+            color: #0a0c14;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 4px;
+            z-index: 3;
+        }
+        .gn-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #00d4ff;
+            border-bottom: 1px solid rgba(0,212,255,0.4);
+            padding-bottom: 2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .gn-read-more svg { width: 14px; height: 14px; fill: currentColor; }
+        .gn-hero:hover .gn-read-more { color: #fff; border-color: #fff; }
+
+        .gn-medium-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .gn-medium .gn-card-thumb {
+			height: 180px;
+		}
+		.gn-medium-body {
+			padding: 10px 12px 14px;
+		}
+		.gn-medium-body .gn-card-title {
+			font-size: 13px;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: #fff;
+			line-height: 1.25;
+			margin-bottom: 6px;
+		}
+		.gn-medium-body .gn-card-excerpt {
+			font-size: 11px;
+			color: #8a93b0;
+			line-height: 1.5;
+			margin-bottom: 8px;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+
+        .gn-small-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        .gn-small .gn-card-thumb {
+            height: 120px;
+        }
+        .gn-small-body {
+            padding: 10px 12px 12px;
+        }
+        .gn-small-body .gn-card-title {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #fff;
+            line-height: 1.25;
+            margin-bottom: 6px;
+        }
+        .gn-small-body .gn-meta {
+            font-size: 10px;
+        }
+        .gn-small-body .gn-category-tag {
+            font-size: 9px;
+            padding: 2px 6px;
+            margin-bottom: 5px;
+        }
+
+        .gn-medium:hover,
+        .gn-small:hover {
+            cursor: default;
+        }
+
+        @media (max-width: 900px) {
+            .gn-medium-row { grid-template-columns: repeat(2, 1fr); }
+            .gn-small-row  { grid-template-columns: repeat(2, 1fr); }
+            .gn-hero .gn-card-thumb { height: 300px; }
+        }
+        @media (max-width: 560px) {
+            .gn-medium-row { grid-template-columns: 1fr; }
+            .gn-small-row  { grid-template-columns: repeat(2, 1fr); }
+            .gn-wrapper { padding: 20px 16px 40px; }
+            .gn-hero .gn-card-thumb { height: 240px; }
+            .gn-hero-body .gn-card-title { font-size: 18px; }
+            .gn-hero-body .gn-card-excerpt { display: none; }
+        }
+    </style>
+
+    <div class="gn-wrapper">
+
+        <div class="gn-header">
+            <h2 class="gn-title">Blog de <span>Noticias</span></h2>
+            <p class="gn-subtitle">Las últimas novedades del universo gaming</p>
+        </div>
+
+        <div class="gn-hero-wrap">
+            <a class="gn-hero gn-card" href="http://gamehub.local/detalle-de-noticia/">
+                <div class="gn-card-thumb">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/ChatGPT-Image-19-may-2026-22_14_29-2.png"
+                         alt="Galaxy Bound: El Próximo Capítulo" loading="eager">
+                </div>
+                <span class="gn-hero-badge">&#9733; Destacado</span>
+                <div class="gn-hero-body">
+                    <span class="gn-category-tag">Expansión</span>
+                    <div class="gn-card-title">Galaxy Bound: El Próximo Capítulo.<br>Una Odisea Espacial Expandida.</div>
+                    <div class="gn-card-excerpt">Explora los confines del cosmos con la nueva expansión de Galaxy Bound. Nuevas misiones, naves inéditas y sistemas estelares jamás cartografiados te aguardan en la aventura espacial más ambiciosa del año.</div>
+                    <span class="gn-read-more">
+                        Leer artículo completo
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </span>
+                </div>
+            </a>
+        </div>
+
+        <div class="gn-medium-row">
+
+            <div class="gn-card gn-medium">
+                <div class="gn-card-thumb">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/forja.png"
+                         alt="La Forja del Destino" loading="lazy">
+                </div>
+                <div class="gn-medium-body">
+                    <span class="gn-category-tag">Actualización</span>
+                    <div class="gn-card-title">La Forja del Destino: La Temporada Oscura ya está aquí</div>
+                    <div class="gn-card-excerpt">La nueva temporada trae una campaña de 20 horas, armas legendarias y un sistema de forja renovado que cambia las reglas del juego.</div>
+                    <div class="gn-meta">
+                        <span class="gn-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/></svg>
+                            IronScribe
+                        </span>
+                        <span class="gn-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                            12 de mayo 2026
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gn-card gn-medium">
+                <div class="gn-card-thumb">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/circulo.png"
+                         alt="El Círculo del Cielo" loading="lazy">
+                </div>
+                <div class="gn-medium-body">
+                    <span class="gn-category-tag">Expansión</span>
+                    <div class="gn-card-title">El Círculo del Cielo abre sus Reinos Etéreos en junio</div>
+                    <div class="gn-card-excerpt">Tres nuevas regiones celestiales y un modo cooperativo para cuatro jugadores protagonizan la mayor expansión de este título de aventuras.</div>
+                    <div class="gn-meta">
+                        <span class="gn-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/></svg>
+                            AzureQuill
+                        </span>
+                        <span class="gn-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                            10 de mayo 2026
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gn-card gn-medium">
+                <div class="gn-card-thumb">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/cyber.png"
+                         alt="Cyber-Samurai 2077" loading="lazy">
+                </div>
+                <div class="gn-medium-body">
+                    <span class="gn-category-tag">Parche</span>
+                    <div class="gn-card-title">Cyber-Samurai 2077: El parche 3.5 revoluciona el combate</div>
+                    <div class="gn-card-excerpt">El nuevo parche rediseña por completo el árbol de habilidades y añade cinco armas cibernéticas únicas obtenibles mediante misiones secundarias.</div>
+                    <div class="gn-meta">
+                        <span class="gn-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/></svg>
+                            NeonShard
+                        </span>
+                        <span class="gn-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                            8 de mayo 2026
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gn-small-row">
+
+            <div class="gn-card gn-small">
+                <div class="gn-card-thumb">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/galactic.png"
+                         alt="Galactic Pioneers" loading="lazy">
+                </div>
+                <div class="gn-small-body">
+                    <span class="gn-category-tag">Hoja de ruta</span>
+                    <div class="gn-card-title">Galactic Pioneers desvela su Roadmap hasta fin de año</div>
+                    <div class="gn-meta">
+                        <span class="gn-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                            6 de mayo 2026
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gn-card gn-small">
+                <div class="gn-card-thumb">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/crystal.png"
+                         alt="The Crystal Kingdom" loading="lazy">
+                </div>
+                <div class="gn-small-body">
+                    <span class="gn-category-tag">DLC</span>
+                    <div class="gn-card-title">The Crystal Kingdom lanza DLC: Cavernas de Cristal Eterno</div>
+                    <div class="gn-meta">
+                        <span class="gn-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                            5 de mayo 2026
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gn-card gn-small">
+                <div class="gn-card-thumb">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/mech.png"
+                         alt="Mech-Warrior Zero" loading="lazy">
+                </div>
+                <div class="gn-small-body">
+                    <span class="gn-category-tag">Multijugador</span>
+                    <div class="gn-card-title">Mech-Warrior Zero renueva el modo competitivo por equipos</div>
+                    <div class="gn-meta">
+                        <span class="gn-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                            4 de mayo 2026
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gn-card gn-small">
+                <div class="gn-card-thumb">
+                    <img src="http://gamehub.local/wp-content/uploads/2026/05/spellbound.png"
+                         alt="Spellbound Odyssey" loading="lazy">
+                </div>
+                <div class="gn-small-body">
+                    <span class="gn-category-tag">Lanzamiento</span>
+                    <div class="gn-card-title">Spellbound Odyssey confirma fecha oficial en Nintendo Switch</div>
+                    <div class="gn-meta">
+                        <span class="gn-meta-item">
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                            3 de mayo 2026
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+HTML;
+    return ob_get_clean();
+}
+add_shortcode('gamehub_news', 'gamehub_news_page');
