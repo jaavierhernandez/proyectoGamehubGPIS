@@ -90,6 +90,9 @@ function gamehub_admin_dashboard_shortcode() {
         }
 
         .gha-nav-item.active svg { stroke: #1a6fff; }
+		
+		.gha-nav-item.danger { color: #7a8099; }
+        .gha-nav-item.danger:hover { color: #ff4d6a; background: rgba(255,77,106,0.08); }
 
         .gha-nav-section {
             font-size: 11px;
@@ -574,6 +577,15 @@ function gamehub_admin_dashboard_shortcode() {
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 Revisar reportes
             </div>
+			<div class="gha-nav-divider" style="margin-top:auto;"></div>
+			<a href="#" class="gha-nav-item danger" onclick="ghLogout(event)">
+				<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+					<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+					<polyline points="16 17 21 12 16 7"/>
+					<line x1="21" y1="12" x2="9" y2="12"/>
+				</svg>
+				Cerrar Sesión
+			</a>
         </aside>
 
         <main class="gha-main">
@@ -800,6 +812,20 @@ function gamehub_admin_dashboard_shortcode() {
         </main>
 
     </div>
+	
+	<script>
+	function ghLogout(e) {
+		e.preventDefault();
+		fetch('/wp-content/themes/gamehub/backend_gamehub/logout.php', {
+			credentials: 'include'
+		})
+		.then(r => r.json())
+		.then(data => {
+			if (data.ok) window.location.href = 'http://gamehub.local/pagina-de-registro-e-inicio-de-sesion/';
+		});
+	}
+	</script>
+	
 HTML;
     return ob_get_clean();
 }
